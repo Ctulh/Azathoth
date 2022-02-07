@@ -8,8 +8,8 @@
 namespace renderer {
     class IRenderer {
     public:
-        virtual void run() const = 0;
-        virtual void stop() const = 0;
+        virtual void run() = 0;
+        virtual void stop() = 0;
     public:
         virtual ~IRenderer() = default;
     };

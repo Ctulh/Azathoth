@@ -10,7 +10,8 @@ using renderer::Renderer;
 int main() {
     Renderer renderer;
     std::thread t(&Renderer::run, std::ref(renderer));
-    t.detach();
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     renderer.stop();
+    t.join();
 
 }
