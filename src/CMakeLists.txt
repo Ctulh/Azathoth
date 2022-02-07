@@ -1,3 +1,4 @@
 add_subdirectory(Logger)
+add_subdirectory(DebugTools)
 add_subdirectory(Window)
 add_subdirectory(Renderer)

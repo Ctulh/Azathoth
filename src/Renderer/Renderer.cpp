@@ -3,9 +3,14 @@
 //
 #include "Renderer/Renderer.hpp"
 #include "Logger/Logger.hpp"
-//#include "Window/OpenGLWindow.hpp"
+#include "Window/OpenGLWindow.hpp"
 
 namespace renderer {
+
+    Renderer::Renderer(): m_window(std::make_shared<window::OpenglWindow>()) {
+        m_window->setWidth(1600);
+        m_window->setHeight(900);
+    }
 
     void Renderer::run()  {
         if(m_isRunning.test_and_set(std::memory_order_acquire)) {

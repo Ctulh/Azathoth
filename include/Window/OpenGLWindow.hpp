@@ -7,19 +7,30 @@
 
 #include "IWindow.hpp"
 #include "GLFW/glfw3.h"
+#include "ErrorCallback.hpp"
+#include "Logger/Logger.hpp"
+#include <iostream>
 
 namespace window {
+
+    void error_callback( int error, const char *msg );
 
     class OpenglWindow: public IWindow<GLFWwindow> {
     public:
         OpenglWindow() {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            glfwSetErrorCallback(OpenGLTools::ErrorCallback);
+            if(not glfwInit()) {
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+                glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+                glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+                glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+            }
 
-            m_window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(m_width, m_height, m_title->c_str(), nullptr, nullptr),
+            m_window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(m_width, m_height, m_title->c_str(), NULL, NULL),
                                                    [](auto window){glfwDestroyWindow(window);});
+            if(m_window == NULL) {
+                logger::log_error("[OPENGL WINDOW] Window creation fails");
+            }
         }
 
         void setHeight(int height) override {
