@@ -14,7 +14,7 @@
 namespace logger {
 
     template <typename T>
-    struct RemoveQualifiers : public std::remove_cvref<std::remove_pointer_t<T>> {};
+struct RemoveQualifiers : public std::remove_cv<std::remove_reference_t<std::remove_pointer_t<T>>> {};
 
     template <typename T>
     struct IsString : public std::is_same<std::string, typename RemoveQualifiers<T>::type> {};

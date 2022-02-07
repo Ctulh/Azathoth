@@ -2,11 +2,15 @@
 // Created by egor on 2/7/22.
 //
 #include "Logger/Logger.hpp"
+#include "Renderer/Renderer.hpp"
+#include <thread>
+
+using renderer::Renderer;
 
 int main() {
-    logger::log_info("test");
-    logger::log_warning("test");
-    logger::log_error("test");
-    logger::log_critical("test");
+    Renderer renderer;
+    std::thread t(&Renderer::run, std::ref(renderer));
+    t.detach();
+    renderer.stop();
 
 }
