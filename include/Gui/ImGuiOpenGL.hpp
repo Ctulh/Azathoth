@@ -73,6 +73,7 @@ namespace gui {
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(m_window.get());
+        glfwPollEvents();
         //
     }
 

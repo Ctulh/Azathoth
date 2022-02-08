@@ -19,7 +19,7 @@ namespace window {
     public:
         OpenglWindow() = default;
     public:
-        void windowInit() override;
+        void init() override;
         void setHeight(int height) override;
         void setWidth(int width) override;
         void setTitle(std::string const& title) override;

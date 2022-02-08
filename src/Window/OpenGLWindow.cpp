@@ -6,7 +6,7 @@
 
 namespace window {
 
-    void OpenglWindow::windowInit() {
+    void OpenglWindow::init() {
         if(not glfwInit()) {
             glfwSetErrorCallback(OpenGLTools::ErrorCallback);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

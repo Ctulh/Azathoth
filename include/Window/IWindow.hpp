@@ -13,7 +13,7 @@ namespace window {
     template <typename WindowType>
     class IWindow {
     public:
-        virtual void windowInit() = 0;
+        virtual void init() = 0;
         virtual std::shared_ptr<WindowType> getWindow() = 0;
         virtual void setHeight(int) = 0;
         virtual void setWidth(int) = 0;

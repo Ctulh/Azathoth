@@ -13,10 +13,8 @@
 
 namespace renderer {
 
-
     using window::IWindow;
     using gui::IGui;
-
 
     template <typename GraphicApiFactory>
     class Renderer: public IRenderer {
@@ -48,7 +46,7 @@ namespace renderer {
         }
 
         logger::log_info("[RENDERER] Renderer is running");
-        m_window->windowInit();
+        m_window->init();
         m_gui->init(m_window->getWindow());
 
         while(m_isRunning.test(std::memory_order_acquire)) {

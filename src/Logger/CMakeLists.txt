@@ -1,6 +1,6 @@
 set(LIB_NAME Azathoth.LoggerLib)
 
-find_package(spdlog)
+find_package(spdlog PATHS ${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
 
 set(SOURCE SpdLogger.cpp
