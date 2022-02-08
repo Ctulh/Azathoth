@@ -2,9 +2,9 @@ set(LIB_NAME Azathoth.DebugTools.OpenGLToolsLib)
 
 set(LOGGER_LIB Azathoth.LoggerLib)
 
-set(SOURCE ErrorCallback.cpp)
+set(SOURCE OpenGLTools.cpp)
 
-set(HEADER ${PROJECT_SOURCE_DIR}/include/DebugTools/OpenGLTools/ErrorCallback.hpp)
+set(HEADER ${PROJECT_SOURCE_DIR}/include/DebugTools/OpenGLTools/OpenGLTools.hpp)
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 

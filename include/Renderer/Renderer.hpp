@@ -53,7 +53,7 @@ namespace renderer {
 
         while(m_isRunning.test(std::memory_order_acquire)) {
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            m_gui->draw(m_window->getWindow());
+            m_gui->draw();
         }
     }
 

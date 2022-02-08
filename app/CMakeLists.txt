@@ -23,7 +23,12 @@ set(SOURCE main.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})
 #------------------------------------------------------------------------------#
 #---------------------LINK COMPONENTS------------------------------------------#
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LOGGER_LIB} ${RENDERER_LIB} ${WINDOW_LIB} ${DEBUG_LIB} ${GUI_LIB})
+target_link_libraries(${PROJECT_NAME} PRIVATE
+                                                ${LOGGER_LIB}
+                                                ${RENDERER_LIB}
+                                                ${WINDOW_LIB}
+                                                ${DEBUG_LIB}
+                                                ${GUI_LIB})
 #------------------------------------------------------------------------------#
 #--------------------INCLUDE DIRS----------------------------------------------#
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)

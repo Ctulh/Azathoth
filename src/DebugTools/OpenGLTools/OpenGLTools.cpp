@@ -1,7 +1,7 @@
 //
 // Created by egor on 2/7/22.
 //
-#include "DebugTools/OpenGLTools/ErrorCallback.hpp"
+#include "DebugTools/OpenGLTools/OpenGLTools.hpp"
 #include "Logger/Logger.hpp"
 
 

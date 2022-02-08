@@ -7,6 +7,7 @@
 
 #include "IGraphicApiFactory.hpp"
 #include "Window/OpenGLWindow.hpp"
+#include "Logger/Logger.hpp"
 #include "Gui/ImGuiOpenGL.hpp"
 
 namespace graphicApiFactory {
@@ -16,16 +17,16 @@ namespace graphicApiFactory {
 
 
     class OpenGLFactory: public IGraphicApiFactory<OpenglWindow::windowType>{
-    private:
-        using returnedWindowType = IWindow<OpenglWindow::windowType>;
     public:
         using windowInstantiationType = OpenglWindow::windowType;
 
-        std::shared_ptr<returnedWindowType> createWindow() const override {
+        [[nodiscard]] std::shared_ptr<IWindow<windowInstantiationType>> createWindow() const override {
+            logger::log_info("[OPENGL FACTORY] Created window");
             return std::make_shared<OpenglWindow>();
         }
 
-        std::shared_ptr<gui::IGui<windowInstantiationType>> createGui() const override {
+        [[nodiscard]] std::shared_ptr<gui::IGui<windowInstantiationType>> createGui() const override {
+            logger::log_info("[OPENGL FACTORY] Created GUI");
             return std::make_shared<gui::ImGuiOpenGL<windowInstantiationType>>();
         }
     };

@@ -14,7 +14,9 @@ namespace gui {
     public:
         virtual bool isInited() = 0;
         virtual void init(std::shared_ptr<WindowType> window) = 0;
-        virtual void draw(std::shared_ptr<WindowType> window) = 0;
+        virtual void draw() = 0;
+    public:
+        virtual ~IGui() = default;
     };
 
 }

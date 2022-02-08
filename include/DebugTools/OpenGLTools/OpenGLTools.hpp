@@ -2,8 +2,8 @@
 // Created by egor on 2/7/22.
 //
 
-#ifndef AZATHOTH_ERRORCALLBACK_HPP
-#define AZATHOTH_ERRORCALLBACK_HPP
+#ifndef AZATHOTH_OPENGLTOOLS_HPP
+#define AZATHOTH_OPENGLTOOLS_HPP
 namespace OpenGLTools {
 
     void ErrorCallback(int error, const char *msg);
@@ -12,4 +12,4 @@ namespace OpenGLTools {
 }
 
 
-#endif //AZATHOTH_ERRORCALLBACK_HPP
+#endif //AZATHOTH_OPENGLTOOLS_HPP
