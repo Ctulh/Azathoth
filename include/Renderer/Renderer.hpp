@@ -7,6 +7,7 @@
 
 #include "IRenderer.hpp"
 #include "Window/IWindow.hpp"
+#include "Gui/IGui.hpp"
 #include <memory>
 #include <atomic>
 
@@ -14,6 +15,7 @@ namespace renderer {
 
 
     using window::IWindow;
+    using gui::IGui;
 
 
     template <typename GraphicApiFactory>
@@ -26,10 +28,13 @@ namespace renderer {
     private:
         std::atomic_flag m_isRunning = false;
         std::shared_ptr<IWindow<typename GraphicApiFactory::windowInstantiationType>> m_window;
+        std::shared_ptr<IGui<typename GraphicApiFactory::windowInstantiationType>> m_gui;
     };
 
     template <typename GraphicApiFactory>
-    Renderer<GraphicApiFactory>::Renderer():m_window(GraphicApiFactory().createWindow()) {
+    Renderer<GraphicApiFactory>::Renderer():
+                        m_window(GraphicApiFactory().createWindow()),
+                        m_gui(GraphicApiFactory().createGui()) {
         m_window.get()->setWidth(1600);
         m_window.get()->setHeight(900);
         m_window.get()->setTitle("Test");
@@ -44,8 +49,11 @@ namespace renderer {
 
         logger::log_info("[RENDERER] Renderer is running");
         m_window->windowInit();
+        m_gui->init(m_window->getWindow());
+
         while(m_isRunning.test(std::memory_order_acquire)) {
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            m_gui->draw(m_window->getWindow());
         }
     }
 

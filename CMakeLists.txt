@@ -8,7 +8,7 @@ project(Azathoth
 set (CMAKE_CXX_STANDARD 20)
 #------------------------------------------------------------------------------#
 #---------------------ADD SUBDIRECTORIES---------------------------------------#
-add_subdirectory(third_party/glfw)
+add_subdirectory(third_party)
 add_subdirectory(src)
 add_subdirectory(app)
 #------------------------------------------------------------------------------#

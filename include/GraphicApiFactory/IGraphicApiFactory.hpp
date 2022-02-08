@@ -5,6 +5,7 @@
 #ifndef AZATHOTH_IGRAPHICAPIFACTORY_HPP
 #define AZATHOTH_IGRAPHICAPIFACTORY_HPP
 #include "Window/IWindow.hpp"
+#include "Gui/IGui.hpp"
 
 namespace graphicApiFactory {
 
@@ -12,6 +13,7 @@ namespace graphicApiFactory {
     class IGraphicApiFactory {
     public:
         virtual std::shared_ptr<window::IWindow<WindowType>> createWindow() const = 0;
+        virtual std::shared_ptr<gui::IGui<WindowType>> createGui() const = 0;
     public:
         virtual ~IGraphicApiFactory() = default;
     };

@@ -11,7 +11,7 @@ using renderer::Renderer;
 int main() {
     Renderer<graphicApiFactory::OpenGLFactory> renderer;
     std::thread t(&Renderer<graphicApiFactory::OpenGLFactory>::run, std::ref(renderer));
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::seconds (10));
     renderer.stop();
     t.join();
 

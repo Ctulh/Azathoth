@@ -30,6 +30,7 @@ namespace window {
 
             m_window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(m_width, m_height, m_title->c_str(), NULL, NULL),
                                                    [](auto window){glfwDestroyWindow(window);});
+            glfwMakeContextCurrent(m_window.get());
             if(m_window == NULL) {
                 logger::log_error("[OPENGL WINDOW] Window creation fails");
             }

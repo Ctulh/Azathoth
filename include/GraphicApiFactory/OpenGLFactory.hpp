@@ -7,6 +7,7 @@
 
 #include "IGraphicApiFactory.hpp"
 #include "Window/OpenGLWindow.hpp"
+#include "Gui/ImGuiOpenGL.hpp"
 
 namespace graphicApiFactory {
 
@@ -19,8 +20,13 @@ namespace graphicApiFactory {
         using returnedWindowType = IWindow<OpenglWindow::windowType>;
     public:
         using windowInstantiationType = OpenglWindow::windowType;
+
         std::shared_ptr<returnedWindowType> createWindow() const override {
             return std::make_shared<OpenglWindow>();
+        }
+
+        std::shared_ptr<gui::IGui<windowInstantiationType>> createGui() const override {
+            return std::make_shared<gui::ImGuiOpenGL<windowInstantiationType>>();
         }
     };
 
