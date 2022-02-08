@@ -45,9 +45,8 @@ namespace renderer {
             return;
         }
 
+        m_gui->setWindow(m_window->getWindow());
         logger::log_info("[RENDERER] Renderer is running");
-        m_window->init();
-        m_gui->init(m_window->getWindow());
 
         while(m_isRunning.test(std::memory_order_acquire)) {
             //std::this_thread::sleep_for(std::chrono::milliseconds(100));

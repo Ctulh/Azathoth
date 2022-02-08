@@ -3,10 +3,11 @@
 //
 #include "Window/OpenGLWindow.hpp"
 #include "Logger/Logger.hpp"
+#include "DebugTools/CommonTools/AzathothAssert.hpp"
 
 namespace window {
 
-    void OpenglWindow::init() {
+    void OpenglWindow::lazyInit() {
         if(not glfwInit()) {
             glfwSetErrorCallback(OpenGLTools::ErrorCallback);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -22,10 +23,8 @@ namespace window {
                 logger::log_error("[OPENGL WINDOW] Window creation fails");
             }
             else {
-                logger::log_info("[OPENGL WINDOW] Window created successful");
+                logger::log_info("[OPENGL WINDOW] Window lazy created successful");
             }
-        } else {
-            logger::log_warning("[OPENGL WINDOW] Re-initialization attempt");
         }
     }
 
@@ -42,6 +41,7 @@ namespace window {
     }
 
     std::shared_ptr<GLFWwindow> OpenglWindow::getWindow() {
+        lazyInit();
         return m_window;
     }
 

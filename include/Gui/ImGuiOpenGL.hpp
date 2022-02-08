@@ -22,38 +22,39 @@ namespace gui {
         ~ImGuiOpenGL();
     public:
         bool isInited() override;
-        void init(std::shared_ptr<WindowType> window) override;
+        void setWindow(std::shared_ptr<WindowType> window) override;
         void draw() override;
     private:
-        std::atomic_flag m_isInited = false;
+        bool m_isInited = false;
         std::shared_ptr<WindowType> m_window;
     };
 
     template <typename WindowType>
     bool ImGuiOpenGL<WindowType>::isInited() {
-        return m_isInited.test(std::memory_order_acquire);
+        return m_isInited;
     }
 
     template <typename WindowType>
-    void ImGuiOpenGL<WindowType>::init(std::shared_ptr<WindowType> window) {
+    void ImGuiOpenGL<WindowType>::setWindow(std::shared_ptr<WindowType> window) {
         AZATHOTH_ASSERT(window.get(), "Window is null");
-
-        if(not m_isInited.test_and_set(std::memory_order_acquire)) {
-           IMGUI_CHECKVERSION();
-           ImGui::CreateContext();
-           ImGuiIO &io = ImGui::GetIO();
-           const char* glsl_version = "#version 130";
-           ImGui_ImplGlfw_InitForOpenGL(window.get(), true);
-           ImGui_ImplOpenGL3_Init(glsl_version);
-           ImGui::StyleColorsDark();
-           m_window = window;
-           logger::log_info("[IMGUI OPENGL] Inited");
-       }
+        m_window = window;
+        if(not m_isInited) {
+            IMGUI_CHECKVERSION();
+            ImGui::CreateContext();
+            ImGuiIO &io = ImGui::GetIO();
+            const char* glsl_version = "#version 130";
+            ImGui_ImplGlfw_InitForOpenGL(m_window.get(), true);
+            ImGui_ImplOpenGL3_Init(glsl_version);
+            ImGui::StyleColorsDark();
+            logger::log_info("[IMGUI OPENGL] Inited");
+            m_isInited = true;
+        }
     }
 
     template <typename WindowType>
     void ImGuiOpenGL<WindowType>::draw() {
-        //AZATHOTH_ASSERT(window.get(), "Window is null");
+        AZATHOTH_ASSERT(m_window.get(), "Window is null");
+
         glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -71,7 +72,6 @@ namespace gui {
         // Render dear imgui into screen
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
         glfwSwapBuffers(m_window.get());
         glfwPollEvents();
         //
@@ -79,12 +79,14 @@ namespace gui {
 
     template <typename WindowType>
     ImGuiOpenGL<WindowType>::~ImGuiOpenGL() {
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
+        if(m_window.get()) {
+            ImGui_ImplOpenGL3_Shutdown();
+            ImGui_ImplGlfw_Shutdown();
+            ImGui::DestroyContext();
 
-        glfwDestroyWindow(m_window.get());
-        glfwTerminate();
+            glfwDestroyWindow(m_window.get());
+            glfwTerminate();
+        }
     }
 }
 

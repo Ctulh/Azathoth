@@ -19,11 +19,13 @@ namespace window {
     public:
         OpenglWindow() = default;
     public:
-        void init() override;
         void setHeight(int height) override;
         void setWidth(int width) override;
         void setTitle(std::string const& title) override;
         std::shared_ptr<GLFWwindow> getWindow() override;
+    private:
+        void lazyInit();
+
     };
 
 }
