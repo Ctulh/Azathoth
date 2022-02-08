@@ -23,6 +23,7 @@ namespace window {
         void setWidth(int width) override;
         void setTitle(std::string const& title) override;
         std::shared_ptr<GLFWwindow> getWindow() override;
+        void draw() override;
     private:
         void lazyInit();
 

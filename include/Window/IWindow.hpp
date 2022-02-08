@@ -17,6 +17,7 @@ namespace window {
         virtual void setHeight(int) = 0;
         virtual void setWidth(int) = 0;
         virtual void setTitle(std::string const&) = 0;
+        virtual void draw() = 0;
     public:
         virtual ~IWindow() = default;
     protected:

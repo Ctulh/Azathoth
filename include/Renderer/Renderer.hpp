@@ -26,16 +26,22 @@ namespace renderer {
     private:
         std::atomic_flag m_isRunning = false;
         std::shared_ptr<IWindow<typename GraphicApiFactory::windowInstantiationType>> m_window;
+        std::shared_ptr<IWindow<typename GraphicApiFactory::windowInstantiationType>> m_window2;
         std::shared_ptr<IGui<typename GraphicApiFactory::windowInstantiationType>> m_gui;
     };
 
     template <typename GraphicApiFactory>
     Renderer<GraphicApiFactory>::Renderer():
                         m_window(GraphicApiFactory().createWindow()),
-                        m_gui(GraphicApiFactory().createGui()) {
+                        m_gui(GraphicApiFactory().createGui()),
+                        m_window2(GraphicApiFactory().createWindow()){
         m_window.get()->setWidth(1600);
         m_window.get()->setHeight(900);
         m_window.get()->setTitle("Test");
+
+        m_window2.get()->setWidth(600);
+        m_window2.get()->setHeight(900);
+        m_window2.get()->setTitle("Test2");
     }
 
     template <typename GraphicApiFactory>
@@ -46,11 +52,13 @@ namespace renderer {
         }
 
         m_gui->setWindow(m_window->getWindow());
+        m_window2->getWindow();
         logger::log_info("[RENDERER] Renderer is running");
 
         while(m_isRunning.test(std::memory_order_acquire)) {
-            //std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            m_window->draw();
             m_gui->draw();
+            m_window2->draw();
         }
     }
 

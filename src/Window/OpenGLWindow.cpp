@@ -45,4 +45,8 @@ namespace window {
         return m_window;
     }
 
+    void OpenglWindow::draw() {
+        glfwMakeContextCurrent(m_window.get());
+    }
+
 }
