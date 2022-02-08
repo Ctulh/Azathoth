@@ -5,12 +5,18 @@
 #ifndef AZATHOTH_RENDERER_HPP
 #define AZATHOTH_RENDERER_HPP
 
-#include "Window/OpenGLWindow.hpp"
 #include "IRenderer.hpp"
+#include "Window/IWindow.hpp"
+#include <memory>
 #include <atomic>
 
 namespace renderer {
 
+
+    using window::IWindow;
+
+
+    template <typename GraphicApiFactory>
     class Renderer: public IRenderer {
     public:
         Renderer();
@@ -19,9 +25,42 @@ namespace renderer {
         void stop() override;
     private:
         std::atomic_flag m_isRunning = false;
-        std::shared_ptr<window::OpenglWindow> m_window;
+        std::shared_ptr<IWindow<typename GraphicApiFactory::windowInstantiationType>> m_window;
     };
 
+    template <typename GraphicApiFactory>
+    Renderer<GraphicApiFactory>::Renderer():m_window(GraphicApiFactory().createWindow()) {
+        m_window.get()->setWidth(1600);
+        m_window.get()->setHeight(900);
+        m_window.get()->setTitle("Test");
+    }
+
+    template <typename GraphicApiFactory>
+    void Renderer<GraphicApiFactory>::run() {
+        if(m_isRunning.test_and_set(std::memory_order_acquire)) {
+            logger::log_info("[RENDERER] Renderer in already running");
+            return;
+        }
+
+        logger::log_info("[RENDERER] Renderer is running");
+        m_window->windowInit();
+        while(m_isRunning.test(std::memory_order_acquire)) {
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+
+    template<typename GraphicApiFactory>
+    void Renderer<GraphicApiFactory>::stop() {
+        if(not m_isRunning.test()) {
+            logger::log_info("[RENDERER] Renderer is already stopped");
+            return;
+        }
+
+        while(m_isRunning.test(std::memory_order_acquire)) {
+            m_isRunning.clear(std::memory_order_release);
+        }
+        logger::log_info("[RENDERER] Renderer is stopped");
+    }
 }
 
 #endif //AZATHOTH_RENDERER_HPP

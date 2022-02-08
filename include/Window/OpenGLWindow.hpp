@@ -13,11 +13,13 @@
 
 namespace window {
 
-    void error_callback( int error, const char *msg );
-
     class OpenglWindow: public IWindow<GLFWwindow> {
     public:
-        OpenglWindow() {
+        using windowType = GLFWwindow;
+
+        OpenglWindow() {}
+
+        void windowInit() override {
             glfwSetErrorCallback(OpenGLTools::ErrorCallback);
             if(not glfwInit()) {
                 glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);

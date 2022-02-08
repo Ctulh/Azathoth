@@ -3,13 +3,14 @@
 //
 #include "Logger/Logger.hpp"
 #include "Renderer/Renderer.hpp"
+#include <GraphicApiFactory/OpenGLFactory.hpp>
 #include <thread>
 
 using renderer::Renderer;
 
 int main() {
-    Renderer renderer;
-    std::thread t(&Renderer::run, std::ref(renderer));
+    Renderer<graphicApiFactory::OpenGLFactory> renderer;
+    std::thread t(&Renderer<graphicApiFactory::OpenGLFactory>::run, std::ref(renderer));
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     renderer.stop();
     t.join();
