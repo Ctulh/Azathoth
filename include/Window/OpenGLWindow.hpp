@@ -14,7 +14,7 @@
 
 namespace window {
 
-    class OpenglWindow: public IWindow<GLFWwindow> {
+    class OpenglWindow: public IWindow {
     public:
         using windowType = GLFWwindow;
 
@@ -25,7 +25,7 @@ namespace window {
         void setHeight(int height) override;
         void setWidth(int width) override;
         void setTitle(std::string const& title) override;
-        std::shared_ptr<GLFWwindow> getWindow() override;
+        std::shared_ptr<void> getWindow() override;
         void draw() override;
         void setEventCallback(eventCallbackFunction const&) override;
     private:

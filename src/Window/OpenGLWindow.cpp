@@ -108,9 +108,9 @@ namespace window {
         m_data.title = std::make_unique<std::string>(title.c_str());
     }
 
-    std::shared_ptr<GLFWwindow> OpenglWindow::getWindow() {
+    std::shared_ptr<void> OpenglWindow::getWindow() {
         lazyInit();
-        return m_window;
+        return {static_cast<void*>(m_window.get()), [](auto window){}};
     }
 
     void OpenglWindow::draw() {

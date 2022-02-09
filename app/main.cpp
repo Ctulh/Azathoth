@@ -25,11 +25,14 @@ public:
     };
 };
 
+    using graphicApiFactory::OpenGLFactory;
 
 int main() {
-    Application<graphicApiFactory::OpenGLFactory> application;
+    OpenGLFactory factory;
+
+    Application application(factory);
     application.pushLayer(new ExampleLayer());
-    std::thread t(&Application<graphicApiFactory::OpenGLFactory>::run, std::ref(application));
+    std::thread t(&Application::run, std::ref(application));
     //std::this_thread::sleep_for(std::chrono::seconds (10));
     //renderer.shutDown();
     t.join();

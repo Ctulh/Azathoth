@@ -11,12 +11,11 @@
 
 namespace window {
 
-    template <typename WindowType>
     class IWindow {
     public:
         using eventCallbackFunction = std::function<void(events::Event&)>;
     public:
-        virtual std::shared_ptr<WindowType> getWindow() = 0;
+        virtual std::shared_ptr<void> getWindow() = 0;
         virtual void setHeight(int) = 0;
         virtual void setWidth(int) = 0;
         virtual void setTitle(std::string const&) = 0;

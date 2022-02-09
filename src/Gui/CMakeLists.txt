@@ -13,7 +13,7 @@ set(LOGGER_LIB Azathoth.LoggerLib)
 find_package(OpenGL REQUIRED)
 #------------------------------------------------------------------------------#
 #---------------------ADD SOURCE-----------------------------------------------#
-set(SOURCE)
+set(SOURCE ImGuiOpenGL.cpp)
 #------------------------------------------------------------------------------#
 #---------------------ADD HEADER-----------------------------------------------#
 set(HEADER ${PROJECT_SOURCE_DIR}/include/Gui/IGui.hpp
@@ -30,7 +30,8 @@ target_include_directories(${LIB_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/third_party/
                            ${PROJECT_SOURCE_DIR}/third_party/imgui/backends)
 #------------------------------------------------------------------------------#
 #---------------------LINK COMPONENTS------------------------------------------#
-target_link_libraries(${LIB_NAME} PRIVATE ${IMGUI_LIB}
+target_link_libraries(${LIB_NAME} PRIVATE glfw
+                                          ${IMGUI_LIB}
                                           ${LOGGER_LIB}
                                           GL)
 #------------------------------------------------------------------------------#

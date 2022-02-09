@@ -9,11 +9,10 @@
 
 namespace graphicApiFactory {
 
-    template<typename WindowType>
     class IGraphicApiFactory {
     public:
-        virtual std::shared_ptr<window::IWindow<WindowType>> createWindow() const = 0;
-        virtual std::shared_ptr<gui::IGui<WindowType>> createGui() const = 0;
+        virtual std::shared_ptr<window::IWindow> createWindow() const = 0;
+        virtual std::shared_ptr<gui::IGui> createGui() const = 0;
     public:
         virtual ~IGraphicApiFactory() = default;
     };
