@@ -13,6 +13,7 @@ set(APIFACTORY_LIB Azathoth.GraphicApiFactory)
 set(DEBUG_LIB Azathoth.DebugTools.OpenGLToolsLib)
 set(GUI_LIB Azathoth.Gui)
 set(LAYERS_LIB Azathoth.LayersLib)
+set(INPUT_LIB Azathoth.InputLib)
 #set(IMGUI_LIB ImGui)
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
@@ -30,7 +31,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
                                                 ${WINDOW_LIB}
                                                 ${DEBUG_LIB}
                                                 ${GUI_LIB}
-                                                ${LAYERS_LIB})
+                                                ${LAYERS_LIB}
+                                                ${INPUT_LIB})
 #------------------------------------------------------------------------------#
 #--------------------INCLUDE DIRS----------------------------------------------#
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)

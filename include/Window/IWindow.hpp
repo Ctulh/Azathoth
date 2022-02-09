@@ -15,7 +15,7 @@ namespace window {
     public:
         using eventCallbackFunction = std::function<void(events::Event&)>;
     public:
-        virtual std::shared_ptr<void> getWindow() = 0;
+        virtual std::shared_ptr<void> getNativeWindow() = 0;
         virtual void setHeight(int) = 0;
         virtual void setWidth(int) = 0;
         virtual void setTitle(std::string const&) = 0;

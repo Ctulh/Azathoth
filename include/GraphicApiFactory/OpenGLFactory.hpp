@@ -7,6 +7,7 @@
 
 #include "IGraphicApiFactory.hpp"
 #include "Window/OpenGLWindow.hpp"
+#include "Input/GlfwWindowInput.hpp"
 #include "Logger/Logger.hpp"
 #include "Gui/ImGuiOpenGL.hpp"
 
@@ -21,7 +22,11 @@ namespace graphicApiFactory {
         using windowInstantiationType = OpenglWindow::windowType;
 
         [[nodiscard]] std::shared_ptr<IWindow> createWindow() const override {
-            logger::log_info("[OPENGL FACTORY] Created window");
+            logger::log_info("[OPENGL FACTORY] Created Window");
+            //__INPUT INITIALIZATION
+            auto input = std::make_shared<input::GlfwWindowInput>();
+             input::Input::setInstance(input);
+            //_____________
             return std::make_shared<OpenglWindow>();
         }
 

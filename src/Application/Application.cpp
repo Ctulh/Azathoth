@@ -4,8 +4,18 @@
 
 #include "Application/Application.hpp"
 #include "Logger/Logger.hpp"
+#include "DebugTools/CommonTools/AzathothAssert.hpp"
 
 namespace application {
+
+    std::shared_ptr<IWindow> Application::getWindow() {
+        return m_window;
+    }
+
+    Application* Application::getInstance() {
+        AZATHOTH_ASSERT(m_instance, "null instance");
+        return m_instance;
+    }
 
     bool Application::onWindowClose(events::WindowCloseEvent &event) {
         shutDown();
@@ -22,13 +32,15 @@ namespace application {
 
     Application::Application(IGraphicApiFactory const& factory):
             m_window(factory.createWindow()),
-            m_gui(factory.createGui()){
+            m_gui(factory.createGui()) {
+
         m_window->setWidth(1600);
         m_window->setHeight(900);
         m_window->setTitle("Test\n");
 
         m_window->setEventCallback(BIND_EVENT_FN(onEvent));
         m_layerStack = std::make_shared<layers::LayerStack>();
+        m_instance = this;
     }
 
     void Application::onEvent(events::Event& event) {
@@ -53,7 +65,7 @@ namespace application {
             logger::log_error("[RENDERER] Window is NUll");
             return;
         }
-        m_gui->setWindow(m_window->getWindow());
+        m_gui->setWindow(m_window->getNativeWindow());
         //m_window2->getWindow();
         logger::log_info("[RENDERER] Renderer is running");
 
@@ -61,6 +73,8 @@ namespace application {
             m_gui->draw();
             m_window->draw();
 
+            auto [x,y] = input::Input::getMousePosition();
+            logger::log_info("Mouse {}, {}",x ,y);
             for (layers::Layer* layer: (*m_layerStack.get())) {
                 layer->onUpdate();
             }
@@ -80,5 +94,7 @@ namespace application {
         m_window.reset();
         logger::log_info("[RENDERER] Renderer is stopped");
     }
+
+    Application* Application::m_instance = nullptr;
 
 }

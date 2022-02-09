@@ -21,7 +21,7 @@ public:
     }
 
     void onEvent(events::Event& event) const override {
-        logger::log_info("ExampleLayer: {}", event.toString());
+       // logger::log_info("ExampleLayer: {}", event.toString());
     };
 };
 

@@ -25,7 +25,7 @@ namespace window {
         void setHeight(int height) override;
         void setWidth(int width) override;
         void setTitle(std::string const& title) override;
-        std::shared_ptr<void> getWindow() override;
+        std::shared_ptr<void> getNativeWindow() override;
         void draw() override;
         void setEventCallback(eventCallbackFunction const&) override;
     private:

@@ -11,6 +11,7 @@
 #include "Window/IWindow.hpp"
 #include "Gui/IGui.hpp"
 #include "GraphicApiFactory/IGraphicApiFactory.hpp"
+#include "Input/Input.h"
 
 #include <memory>
 #include <atomic>
@@ -24,17 +25,20 @@ namespace application {
     using window::IWindow;
     using layers::Layer;
     using events::Event;
+    using input::Input;
     using gui::IGui;
 
     class Application: public IApplication {
     public:
         Application(IGraphicApiFactory const&);
     public:
+        static Application* getInstance();
         void run() override;
         void shutDown() override;
         void onEvent(Event&) override;
         void pushLayer(Layer*) override;
         void pushOverlay(Layer*) override;
+        std::shared_ptr<IWindow> getWindow();
     private:
         std::shared_ptr<IWindow> m_window;
         std::shared_ptr<IGui> m_gui;
@@ -42,6 +46,7 @@ namespace application {
         std::atomic_flag m_isRunning = false;
     private:
         bool onWindowClose(events::WindowCloseEvent& event);
+        static Application* m_instance;
     };
 
 }
