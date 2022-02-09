@@ -27,6 +27,7 @@ namespace window {
                                                                    logger::log_info("[OPENGL WINDOW POINTER] Destructed");});
             glfwMakeContextCurrent(m_window.get());
             glfwSetWindowUserPointer(m_window.get(), &m_data);
+            logger::log_info("[OPENGL WINDOW] Detect {} video card", (const char*)(glGetString(GL_VENDOR)));
             if(m_window == NULL) {
                 logger::log_error("[OPENGL WINDOW] Window creation fails {} {} {}", m_data.width, m_data.height, m_data.title->c_str());
             }
