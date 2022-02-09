@@ -16,7 +16,7 @@ namespace events {
         inline float getX() const { return m_mouseX; }
         inline float getY() const { return m_mouseY; }
 
-        std::string toString() {
+        std::string toString() const override {
             std::stringstream ss;
             ss << "MouseMovedEvent: " << m_mouseX << ", " << m_mouseY;
             return ss.str();
@@ -66,7 +66,7 @@ namespace events {
     public:
         MouseButtonPressedEvent(int button): MouseButtonEvent(button) {}
 
-        std::string toString() {
+        std::string toString() const override {
             std::stringstream ss;
             ss << "MouseButtonPressedEvent: " << m_button;
             return ss.str();
@@ -79,7 +79,7 @@ namespace events {
     public:
         MouseButtonReleasedEvent(int button): MouseButtonEvent(button) {}
 
-        std::string toString() {
+        std::string toString() const override {
             std::stringstream ss;
             ss << "MouseButtonReleasedEvent: " << m_button;
             return ss.str();

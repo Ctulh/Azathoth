@@ -76,14 +76,10 @@ namespace gui {
 
     template <typename WindowType>
     ImGuiOpenGL<WindowType>::~ImGuiOpenGL() {
-        if(m_window.get()) {
-            ImGui_ImplOpenGL3_Shutdown();
-            ImGui_ImplGlfw_Shutdown();
-            ImGui::DestroyContext();
-
-            glfwDestroyWindow(m_window.get());
-            glfwTerminate();
-        }
+        logger::log_info("[IMGUI OPENGL] Destructed");
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
     }
 }
 

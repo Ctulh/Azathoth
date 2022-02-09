@@ -39,12 +39,13 @@ namespace events {
         int m_repeatCount;
     };
 
-    class KeyeReleasedEvent: public KeyEvent {
+    class KeyReleasedEvent: public KeyEvent {
     public:
-        KeyeReleasedEvent(int keyCode): KeyEvent(keyCode) {}
+        KeyReleasedEvent(int keyCode): KeyEvent(keyCode) {}
         std::string toString() const override {
             std::stringstream ss;
             ss << "KeyReleasedEvent :" << m_keyCode;
+            return ss.str();
         }
 
         EVENT_CLASS_TYPE(:KeyReleased)

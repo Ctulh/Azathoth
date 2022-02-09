@@ -17,7 +17,7 @@ namespace window {
     class OpenglWindow: public IWindow<GLFWwindow> {
     public:
         using windowType = GLFWwindow;
-        using eventCallbackFunction = std::function<void(events::Event&)>;
+
     public:
         OpenglWindow() = default;
         ~OpenglWindow();
@@ -27,6 +27,7 @@ namespace window {
         void setTitle(std::string const& title) override;
         std::shared_ptr<GLFWwindow> getWindow() override;
         void draw() override;
+        void setEventCallback(eventCallbackFunction const&) override;
     private:
         void lazyInit();
     private:
@@ -34,7 +35,7 @@ namespace window {
             std::unique_ptr<std::string> title;
             int width, height;
 
-            //EventCallbackFunc m_eventCallback;
+            eventCallbackFunction eventCallback;
         };
 
         WindowData m_data;
