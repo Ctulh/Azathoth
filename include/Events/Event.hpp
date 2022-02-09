@@ -47,6 +47,9 @@ namespace events {
         inline bool isInCategory(EventCategory category) {
             return getCategoryFlags() & static_cast<int>(category);
         }
+        virtual bool isHandled() {return m_handled;}
+    public:
+        ~Event() = default;
     protected:
         bool m_handled = false;
     };
@@ -60,8 +63,8 @@ namespace events {
 
         template<typename T>
         bool dispatch(EventFunc<T> func) {
-            if(m_event.getEventType() == T::GetStaticType()) {
-                m_event.m_handled = func(*(T*)&m_event);
+            if(m_event.getEventType() == T::getStaticType()) {
+                m_event.m_handled = func(*(T*)(&m_event));//Can be error!
                 return true;
             }
             return false;

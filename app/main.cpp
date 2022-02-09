@@ -4,16 +4,32 @@
 #define ASSERTIONS_ENABLED
 
 #include "Logger/Logger.hpp"
-#include "Renderer/Renderer.hpp"
+#include "Application/Application.hpp"
 #include <GraphicApiFactory/OpenGLFactory.hpp>
 #include <thread>
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "Layers/Layer.hpp"
 
-using renderer::Renderer;
+using application::Application;
+
+class ExampleLayer: public layers::Layer {
+public:
+    ExampleLayer(): Layer("Example") {}
+
+    void onUpdate() const override {
+       // logger::log_info("ExampleLayer: onUpdate");
+    }
+
+    void onEvent(events::Event& event) const override {
+        logger::log_info("ExampleLayer: {}", event.toString());
+    };
+};
+
 
 int main() {
-    Renderer<graphicApiFactory::OpenGLFactory> renderer;
-    std::thread t(&Renderer<graphicApiFactory::OpenGLFactory>::run, std::ref(renderer));
+    Application<graphicApiFactory::OpenGLFactory> application;
+    application.pushLayer(new ExampleLayer());
+    std::thread t(&Application<graphicApiFactory::OpenGLFactory>::run, std::ref(application));
     //std::this_thread::sleep_for(std::chrono::seconds (10));
     //renderer.shutDown();
     t.join();

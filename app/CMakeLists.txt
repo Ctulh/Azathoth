@@ -7,11 +7,12 @@ message ( "     BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}" )
 #------------------------------------------------------------------------------#
 #---------------------SET LOCAL NAME TO LINK COMPONENT-------------------------#
 set(LOGGER_LIB Azathoth.LoggerLib)
-set(RENDERER_LIB Azathoth.RendererLib)
+set(APPLICATION_LIB Azathoth.ApplicationLib)
 set(WINDOW_LIB Azathoth.WindowLib)
 set(APIFACTORY_LIB Azathoth.GraphicApiFactory)
 set(DEBUG_LIB Azathoth.DebugTools.OpenGLToolsLib)
 set(GUI_LIB Azathoth.Gui)
+set(LAYERS_LIB Azathoth.LayersLib)
 #set(IMGUI_LIB ImGui)
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
@@ -25,10 +26,11 @@ add_executable(${PROJECT_NAME} ${SOURCE})
 #---------------------LINK COMPONENTS------------------------------------------#
 target_link_libraries(${PROJECT_NAME} PRIVATE
                                                 ${LOGGER_LIB}
-                                                ${RENDERER_LIB}
+                                                ${APPLICATION_LIB}
                                                 ${WINDOW_LIB}
                                                 ${DEBUG_LIB}
-                                                ${GUI_LIB})
+                                                ${GUI_LIB}
+                                                ${LAYERS_LIB})
 #------------------------------------------------------------------------------#
 #--------------------INCLUDE DIRS----------------------------------------------#
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
