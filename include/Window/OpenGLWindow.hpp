@@ -9,6 +9,7 @@
 #include "GLFW/glfw3.h"
 #include "OpenGLTools.hpp"
 #include "Logger/Logger.hpp"
+#include "Events/Event.hpp"
 #include <iostream>
 
 namespace window {
@@ -16,8 +17,10 @@ namespace window {
     class OpenglWindow: public IWindow<GLFWwindow> {
     public:
         using windowType = GLFWwindow;
+        using eventCallbackFunction = std::function<void(events::Event&)>;
     public:
         OpenglWindow() = default;
+        ~OpenglWindow();
     public:
         void setHeight(int height) override;
         void setWidth(int width) override;
@@ -26,7 +29,16 @@ namespace window {
         void draw() override;
     private:
         void lazyInit();
+    private:
+        struct WindowData {
+            std::unique_ptr<std::string> title;
+            int width, height;
 
+            //EventCallbackFunc m_eventCallback;
+        };
+
+        WindowData m_data;
+        std::shared_ptr<windowType> m_window;
     };
 
 }

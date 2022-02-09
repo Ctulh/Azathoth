@@ -55,7 +55,6 @@ namespace gui {
     void ImGuiOpenGL<WindowType>::draw() {
         AZATHOTH_ASSERT(m_window.get(), "Window is null");
 
-        glfwPollEvents();
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -72,8 +71,6 @@ namespace gui {
         // Render dear imgui into screen
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(m_window.get());
-        glfwPollEvents();
         //
     }
 

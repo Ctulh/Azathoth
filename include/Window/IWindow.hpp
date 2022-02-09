@@ -20,11 +20,6 @@ namespace window {
         virtual void draw() = 0;
     public:
         virtual ~IWindow() = default;
-    protected:
-        std::shared_ptr<WindowType> m_window;
-        std::shared_ptr<std::string> m_title = std::make_shared<std::string>("Title");
-        int m_height = 480;
-        int m_width = 640;
     };
 
 }

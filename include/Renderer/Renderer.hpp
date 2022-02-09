@@ -52,13 +52,13 @@ namespace renderer {
         }
 
         m_gui->setWindow(m_window->getWindow());
-        m_window2->getWindow();
+        //m_window2->getWindow();
         logger::log_info("[RENDERER] Renderer is running");
 
         while(m_isRunning.test(std::memory_order_acquire)) {
             m_window->draw();
             m_gui->draw();
-            m_window2->draw();
+            //m_window2->draw();
         }
     }
 
