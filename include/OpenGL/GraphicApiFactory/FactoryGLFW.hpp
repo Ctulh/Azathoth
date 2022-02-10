@@ -5,11 +5,11 @@
 #ifndef AZATHOTH_FACTORYGLFW_HPP
 #define AZATHOTH_FACTORYGLFW_HPP
 
-#include "IGraphicApiFactory.hpp"
-#include "Window/WindowGLFW.hpp"
-#include "Input/WindowInpuGLFW.hpp"
+#include "GraphicApiFactory/IGraphicApiFactory.hpp"
+#include "OpenGL/Window/WindowGLFW.hpp"
+#include "OpenGL/Input/WindowInpuGLFW.hpp"
 #include "Logger/Logger.hpp"
-#include "Gui/ImGuiLayerGLFW.hpp"
+#include "OpenGL/Gui/ImGuiLayerGLFW.hpp"
 
 namespace graphicApiFactory {
 

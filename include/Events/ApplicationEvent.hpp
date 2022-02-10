@@ -6,6 +6,7 @@
 #define AZATHOTH_APPLICATIONEVENT_HPP
 
 #include <sstream>
+
 #include "Event.hpp"
 
 namespace events {

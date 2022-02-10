@@ -4,7 +4,7 @@
 
 #include "Application/Application.hpp"
 #include "Logger/Logger.hpp"
-#include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "DebugTools/AzathothAssert.hpp"
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 

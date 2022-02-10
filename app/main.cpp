@@ -5,9 +5,9 @@
 
 #include "Logger/Logger.hpp"
 #include "Application/Application.hpp"
-#include <GraphicApiFactory/FactoryGLFW.hpp>
+#include "OpenGL/GraphicApiFactory/FactoryGLFW.hpp"
 #include <thread>
-#include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "DebugTools/AzathothAssert.hpp"
 #include "Layers/Layer.hpp"
 #include "Input/KeyCodes.hpp"
 

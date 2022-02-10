@@ -5,9 +5,9 @@
 #ifndef AZATHOTH_WINDOWGLFW_HPP
 #define AZATHOTH_WINDOWGLFW_HPP
 
-#include "IWindow.hpp"
+#include "Window/IWindow.hpp"
 #include "GLFW/glfw3.h"
-#include "OpenGLTools.hpp"
+#include "OpenGL/DebugTools/OpenGLTools.hpp"
 #include "Logger/Logger.hpp"
 #include "Events/Event.hpp"
 #include "Renderer/IGraphicsContext.hpp"

@@ -5,7 +5,6 @@
 #ifndef AZATHOTH_KEYEVENT_HPP
 #define AZATHOTH_KEYEVENT_HPP
 
-#include <sstream>
 #include "Event.hpp"
 
 namespace events {

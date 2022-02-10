@@ -5,7 +5,7 @@
 #ifndef AZATHOTH_GRAPHICSCONTEXTOPENGL_HPP
 #define AZATHOTH_GRAPHICSCONTEXTOPENGL_HPP
 
-#include "IGraphicsContext.hpp"
+#include "Renderer/IGraphicsContext.hpp"
 struct GLFWwindow;
 
 namespace renderer {

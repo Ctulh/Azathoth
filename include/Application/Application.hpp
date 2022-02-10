@@ -5,16 +5,15 @@
 #ifndef AZATHOTH_APPLICATION_HPP
 #define AZATHOTH_APPLICATION_HPP
 
-#include "IApplication.hpp"
-#include "Layers/LayerStack.hpp"
-#include "Events/ApplicationEvent.hpp"
-#include "Window/IWindow.hpp"
-#include "GraphicApiFactory/IGraphicApiFactory.hpp"
-#include "Input/Input.h"
-#include "Gui/ImGuiLayerGLFW.hpp"
-#include "Renderer/Shader.hpp"
 #include <memory>
 #include <atomic>
+
+#include "GraphicApiFactory/IGraphicApiFactory.hpp"
+#include "Events/ApplicationEvent.hpp"
+#include "Layers/LayerStack.hpp"
+#include "Renderer/Shader.hpp"
+#include "Window/IWindow.hpp"
+#include "IApplication.hpp"
 
 namespace application {
 
@@ -25,7 +24,6 @@ namespace application {
     using window::IWindow;
     using layers::Layer;
     using events::Event;
-    using input::Input;
     using renderer::Shader;
 
 

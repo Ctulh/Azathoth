@@ -1,4 +1,9 @@
 set(LIB_NAME Azathoth.LayersLib)
+list(APPEND ${LINK_LIST} ${LIB_NAME})
+
+message(${PROJECT_NAME})
+message ( "     SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}" )
+message ( "     BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}" )
 
 set(HEADER ${PROJECT_SOURCE_DIR}/include/Layers/Layer.hpp
            ${PROJECT_SOURCE_DIR}/include/Layers/LayerStack.hpp)

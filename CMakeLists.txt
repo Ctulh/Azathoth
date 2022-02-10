@@ -6,6 +6,8 @@ project(Azathoth
         LANGUAGES CXX)
 
 set (CMAKE_CXX_STANDARD 20)
+
+option(BUILD_OPENGL_API "Build openGL API" ON)
 #------------------------------------------------------------------------------#
 #---------------------ADD SUBDIRECTORIES---------------------------------------#
 add_subdirectory(third_party)

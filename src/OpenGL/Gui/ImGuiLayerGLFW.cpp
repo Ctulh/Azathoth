@@ -2,10 +2,10 @@
 // Created by egor on 2/9/22.
 //
 
-#include "Gui/ImGuiLayerGLFW.hpp"
+#include "OpenGL/Gui/ImGuiLayerGLFW.hpp"
 
 #include "Logger/Logger.hpp"
-#include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "DebugTools/AzathothAssert.hpp"
 #include "Application/Application.hpp"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_glfw.h"

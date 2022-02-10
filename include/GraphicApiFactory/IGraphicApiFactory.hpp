@@ -4,10 +4,10 @@
 
 #ifndef AZATHOTH_IGRAPHICAPIFACTORY_HPP
 #define AZATHOTH_IGRAPHICAPIFACTORY_HPP
+
+#include "OpenGL/Gui/ImGuiLayerGLFW.hpp" //TODO fix this include. WTF?
 #include "Window/IWindow.hpp"
 #include "Layers/Layer.hpp"
-#include "Gui/ImGuiLayerGLFW.hpp"
-#include "Input/Input.h"
 
 namespace graphicApiFactory {
 

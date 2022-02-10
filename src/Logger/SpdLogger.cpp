@@ -4,7 +4,6 @@
 #include "Logger/SpdLogger.hpp"
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
-#include <chrono>
 
 namespace logger {
 

@@ -1,13 +1,13 @@
 //
 // Created by egor on 2/10/22.
 //
-#include "Renderer/GraphicsContextOpenGL.hpp"
-#include "DebugTools/OpenGLTools/OpenGLTools.hpp"
-#include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "OpenGL/Renderer/GraphicsContextOpenGL.hpp"
+#include "OpenGL/DebugTools/OpenGLTools.hpp"
+#include "DebugTools/AzathothAssert.hpp"
 #include "Logger/Logger.hpp"
 #include "glad/glad.h"
 
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
 namespace renderer {
 

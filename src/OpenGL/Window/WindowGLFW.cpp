@@ -1,13 +1,13 @@
 //
 // Created by egor on 2/7/22.
 //
-#include "Window/WindowGLFW.hpp"
+#include "OpenGL/Window/WindowGLFW.hpp"
 #include "Logger/Logger.hpp"
-#include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "DebugTools/AzathothAssert.hpp"
 #include "Events/ApplicationEvent.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"
-#include "Renderer/GraphicsContextOpenGL.hpp"
+#include "OpenGL/Renderer/GraphicsContextOpenGL.hpp"
 
 namespace window {
 

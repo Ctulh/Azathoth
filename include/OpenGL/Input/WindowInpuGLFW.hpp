@@ -5,7 +5,7 @@
 #ifndef AZATHOTH_WINDOWINPUGLFW_HPP
 #define AZATHOTH_WINDOWINPUGLFW_HPP
 
-#include "Input.h"
+#include "Input/Input.h"
 
 namespace input {
 

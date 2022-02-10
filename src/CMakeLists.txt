@@ -1,10 +1,11 @@
 add_subdirectory(Logger)
-add_subdirectory(DebugTools)
-add_subdirectory(Window)
 add_subdirectory(Application)
-add_subdirectory(GraphicApiFactory)
 add_subdirectory(Layers)
-add_subdirectory(Gui)
 add_subdirectory(Events)
-add_subdirectory(Input)
-add_subdirectory(Renderer)
+
+
+if (BUILD_OPENGL_API)
+    message("BUILDING OPENGL API")
+    add_subdirectory(OpenGL)
+endif()
+

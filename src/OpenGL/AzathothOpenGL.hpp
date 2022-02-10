@@ -1,0 +1,8 @@
+//
+// Created by egor on 2/10/22.
+//
+
+#ifndef AZATHOTH_AZATHOTHOPENGL_HPP
+#define AZATHOTH_AZATHOTHOPENGL_HPP
+
+#endif //AZATHOTH_AZATHOTHOPENGL_HPP

@@ -6,16 +6,15 @@ message ( "     SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}" )
 message ( "     BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}" )
 #------------------------------------------------------------------------------#
 #---------------------SET LOCAL NAME TO LINK COMPONENT-------------------------#
-set(LOGGER_LIB Azathoth.LoggerLib)
+if(BUILD_OPENGL_API)
+    set(GRAPHIC_API Azathoth.OpenGL.Lib)
+endif()
+
 set(APPLICATION_LIB Azathoth.ApplicationLib)
-set(WINDOW_LIB Azathoth.WindowLib)
-set(APIFACTORY_LIB Azathoth.GraphicApiFactory)
-set(DEBUG_LIB Azathoth.DebugTools.OpenGLToolsLib)
-set(GUI_LIB Azathoth.GuiLib)
+set(EVENTS_LIB Azathoth.EventsLib)
 set(LAYERS_LIB Azathoth.LayersLib)
-set(INPUT_LIB Azathoth.InputLib)
-set(IMGUI_LIB ImGui)
-set(RENDERER_LIB Azathoth.RendererLib)
+set(LOGGER_LIB Azathoth.LoggerLib)
+
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
 #------------------------------------------------------------------------------#
@@ -26,16 +25,13 @@ set(SOURCE main.cpp)
 add_executable(${PROJECT_NAME} ${SOURCE})
 #------------------------------------------------------------------------------#
 #---------------------LINK COMPONENTS------------------------------------------#
-target_link_libraries(${PROJECT_NAME} PRIVATE
-                                                ${LOGGER_LIB}
-                                                ${APPLICATION_LIB}
-                                                ${WINDOW_LIB}
-                                                ${DEBUG_LIB}
-                                                ${GUI_LIB}
-                                                ${LAYERS_LIB}
-                                                ${INPUT_LIB}
-                                                ${IMGUI_LIB}
-                                                ${RENDERER_LIB})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${GRAPHIC_API}
+                                              ${APPLICATION_LIB}
+        ${EVENTS_LIB}
+        ${LAYERS_LIB}
+        ${LOGGER_LIB}
+        )
+
 #------------------------------------------------------------------------------#
 #--------------------INCLUDE DIRS----------------------------------------------#
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)

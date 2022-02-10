@@ -1,5 +1,9 @@
 set(LIB_NAME Azathoth.LoggerLib)
+list(APPEND ${LINK_LIST} ${LIB_NAME})
 
+message(${PROJECT_NAME})
+message ( "     SOURCE_DIR = ${CMAKE_CURRENT_SOURCE_DIR}" )
+message ( "     BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}" )
 find_package(spdlog PATHS ${PROJECT_SOURCE_DIR}/third_party/spdlog)
 
 

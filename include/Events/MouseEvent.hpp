@@ -5,7 +5,6 @@
 #ifndef AZATHOTH_MOUSEEVENT_HPP
 #define AZATHOTH_MOUSEEVENT_HPP
 
-#include <sstream>
 #include "Event.hpp"
 
 namespace events {

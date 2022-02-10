@@ -2,7 +2,7 @@
 // Created by egor on 2/9/22.
 //
 
-#include "Input/WindowInpuGLFW.hpp"
+#include "OpenGL/Input/WindowInpuGLFW.hpp"
 #include "GLFW/glfw3.h"
 #include "Application/Application.hpp"
 
