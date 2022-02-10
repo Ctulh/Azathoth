@@ -14,7 +14,7 @@ set(SOURCE )
 #------------------------------------------------------------------------------#
 #---------------------ADD HEADER-----------------------------------------------#
 set(HEADER ${PROJECT_SOURCE_DIR}/include/GraphicApiFactory/IGraphicApiFactory.hpp
-           ${PROJECT_SOURCE_DIR}/include/GraphicApiFactory/OpenGLFactory.hpp)
+        ${PROJECT_SOURCE_DIR}/include/GraphicApiFactory/FactoryGLFW.hpp)
 #------------------------------------------------------------------------------#
 #------------------ADD LIBRARY-------------------------------------------------#
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})

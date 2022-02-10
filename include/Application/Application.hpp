@@ -11,7 +11,7 @@
 #include "Window/IWindow.hpp"
 #include "GraphicApiFactory/IGraphicApiFactory.hpp"
 #include "Input/Input.h"
-#include "Gui/ImGuiOpenGL.hpp"
+#include "Gui/ImGuiLayerGLFW.hpp"
 #include <memory>
 #include <atomic>
 
@@ -39,9 +39,8 @@ namespace application {
         void pushOverlay(Layer*) override;
         IWindow& getWindow();
     private:
-        std::shared_ptr<IWindow> m_window;
-        gui::ImGuiOpenGL* m_gui;
-        std::shared_ptr<LayerStack> m_layerStack;
+        std::unique_ptr<IWindow> m_window;
+        std::unique_ptr<LayerStack> m_layerStack;
         std::atomic_flag m_isRunning = false;
     private:
         void onUpdate();

@@ -20,6 +20,7 @@ namespace layers {
         void pushOverlay(Layer*);
         void popLayer(Layer*);
         void popOverlay(Layer*);
+        Layer* operator[](std::string const&);
 
         std::vector<Layer*>::iterator begin() { return m_layers.begin(); }
         std::vector<Layer*>::iterator end() { return m_layers.end(); }

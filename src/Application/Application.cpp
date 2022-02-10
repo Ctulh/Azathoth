@@ -25,25 +25,18 @@ namespace application {
 
     void Application::pushLayer(layers::Layer* layer) {
         m_layerStack->pushLayer(layer);
-        layer->onAttach();
     }
 
-    void Application::pushOverlay(layers::Layer* layer) {
-        m_layerStack->pushOverlay(layer);
-        layer->onAttach();
+    void Application::pushOverlay(layers::Layer* overlay) {
+        m_layerStack->pushOverlay(overlay);
     }
 
     Application::Application(IGraphicApiFactory const& factory):
             m_window(factory.createWindow()) {
         m_instance = this;
-        m_gui = new gui::ImGuiOpenGL;
-        m_window->setWidth(1600);
-        m_window->setHeight(900);
-        m_window->setTitle("Test\n");
-
+        m_layerStack = std::make_unique<layers::LayerStack>();
+        m_layerStack->pushOverlay(factory.createGui());
         m_window->setEventCallback(BIND_EVENT_FN(onEvent));
-        m_layerStack = std::make_shared<layers::LayerStack>();
-        pushOverlay(m_gui);
     }
 
     void Application::onUpdate() {
@@ -73,26 +66,25 @@ namespace application {
             logger::log_error("[RENDERER] Window is NUll");
             return;
         }
-        //m_gui->setWindow(m_window->getNativeWindow());
-        //m_window2->getWindow();
         logger::log_info("[RENDERER] Renderer is running");
-        glfwMakeContextCurrent((GLFWwindow*)(m_window.get()->getNativeWindow().get()));
+        glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         while(m_isRunning.test(std::memory_order_acquire)) {
-          //  m_gui->draw();
             glfwPollEvents();
 
 
-            m_gui->begin();
-            for (layers::Layer* layer: (*m_layerStack.get())) {
+            dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"])->begin();
+            for (layers::Layer* layer: (*m_layerStack)) {
                 layer->onImGuiRender();
             }
-            m_gui->end();
+            dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"])->end();
 
-            for (layers::Layer* layer: (*m_layerStack.get())) {
+            for (layers::Layer* layer: (*m_layerStack)) {
                 layer->onUpdate();
             }
 
             m_window->draw();
+            glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+            glClear(GL_COLOR_BUFFER_BIT);
         }
     }
 

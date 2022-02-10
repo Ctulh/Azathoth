@@ -5,7 +5,7 @@
 
 #include "Logger/Logger.hpp"
 #include "Application/Application.hpp"
-#include <GraphicApiFactory/OpenGLFactory.hpp>
+#include <GraphicApiFactory/FactoryGLFW.hpp>
 #include <thread>
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
 #include "Layers/Layer.hpp"
@@ -35,12 +35,12 @@ public:
     }
 };
 
-    using graphicApiFactory::OpenGLFactory;
+    using graphicApiFactory::FactoryGLFW;
 
 
 
 int main() {
-    OpenGLFactory factory;
+    FactoryGLFW factory;
 
     Application application(factory);
     application.pushLayer(new ExampleLayer());

@@ -2,7 +2,7 @@
 // Created by egor on 2/9/22.
 //
 
-#include "Gui/ImGuiOpenGL.hpp"
+#include "Gui/ImGuiLayerGLFW.hpp"
 
 #include "Logger/Logger.hpp"
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
@@ -13,9 +13,9 @@
 
 namespace gui {
 
-    ImGuiOpenGL::ImGuiOpenGL(): layers::Layer("GUI") {}
+    ImGuiLayerGLFW::ImGuiLayerGLFW(): layers::Layer("GUI") {}
 
-    void ImGuiOpenGL::onAttach() const {
+    void ImGuiLayerGLFW::onAttach() const {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
 
@@ -43,25 +43,25 @@ namespace gui {
         logger::log_info("[IMGUI OPENGL] Attached");
     }
 
-    void ImGuiOpenGL::onDetach() const {
+    void ImGuiLayerGLFW::onDetach() const {
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
         logger::log_info("[IMGUI OPENGL] Detached");
     }
 
-    void ImGuiOpenGL::onImGuiRender() const {
+    void ImGuiLayerGLFW::onImGuiRender() const {
         static bool show = true;
         ImGui::ShowDemoWindow(&show);
     }
 
-    void ImGuiOpenGL::begin() {
+    void ImGuiLayerGLFW::begin() const {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
 
-    void ImGuiOpenGL::end() {
+    void ImGuiLayerGLFW::end() const {
         ImGuiIO &io = ImGui::GetIO();
         auto application = application::Application::getInstance();
         io.DisplaySize = ImVec2(application->getWindow().getWidth(), application->getWindow().getHeight());
@@ -79,7 +79,7 @@ namespace gui {
       //  glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    ImGuiOpenGL::~ImGuiOpenGL() {
+    ImGuiLayerGLFW::~ImGuiLayerGLFW() {
 
     }
 

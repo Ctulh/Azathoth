@@ -1,14 +1,14 @@
 set(LIB_NAME Azathoth.InputLib)
 
 set(HEADER ${PROJECT_SOURCE_DIR}/include/Input/Input.h
-           ${PROJECT_SOURCE_DIR}/include/Input/GlfwWindowInput.hpp
+        ${PROJECT_SOURCE_DIR}/include/Input/WindowInpuGLFW.hpp
            ${PROJECT_SOURCE_DIR}/include/Input/KeyCodes.hpp
            ${PROJECT_SOURCE_DIR}/include/Input/MouseCodes.hpp)
 
 
 set(LOGGER_LIB Azathoth.LoggerLib)
 
-set(SOURCE GlfwWindowInput.cpp)
+set(SOURCE WindowInpuGLFW.cpp)
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 

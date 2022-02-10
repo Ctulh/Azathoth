@@ -2,39 +2,39 @@
 // Created by egor on 2/9/22.
 //
 
-#include "Input/GlfwWindowInput.hpp"
+#include "Input/WindowInpuGLFW.hpp"
 #include "GLFW/glfw3.h"
 #include "Application/Application.hpp"
 
 namespace input {
 
-    bool GlfwWindowInput::isKeyPressedImpl(int keyCode) {
+    bool WindowInpuGLFW::isKeyPressedImpl(int keyCode) {
         auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
         auto state = glfwGetKey(window, keyCode);
         return state == GLFW_PRESS || state == GLFW_REPEAT;
     }
 
-    bool GlfwWindowInput::isMouseButtonPressedImpl(int button) {
+    bool WindowInpuGLFW::isMouseButtonPressedImpl(int button) {
         auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
         auto state = glfwGetMouseButton(window, button);
         return state == GLFW_PRESS || state == GLFW_REPEAT;
     }
 
-    float GlfwWindowInput::getMouseXImpl() {
+    float WindowInpuGLFW::getMouseXImpl() {
         auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
         double mouseX, mouseY;
         glfwGetCursorPos(window, &mouseX, &mouseY);
         return static_cast<float>(mouseX);
     }
 
-    float GlfwWindowInput::getMouseYImpl() {
+    float WindowInpuGLFW::getMouseYImpl() {
         auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
         double mouseX, mouseY;
         glfwGetCursorPos(window, &mouseX, &mouseY);
         return static_cast<float>(mouseY);
     }
 
-    std::pair<float, float> GlfwWindowInput::getMousePositionImpl() {
+    std::pair<float, float> WindowInpuGLFW::getMousePositionImpl() {
         auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
         double mouseX, mouseY;
         glfwGetCursorPos(window, &mouseX, &mouseY);

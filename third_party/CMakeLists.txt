@@ -1,4 +1,5 @@
 add_subdirectory(glfw)
+add_subdirectory(glad)
 
 set(LIB_NAME ImGui)
 

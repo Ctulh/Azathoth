@@ -6,15 +6,15 @@
 #define AZATHOTH_IGRAPHICAPIFACTORY_HPP
 #include "Window/IWindow.hpp"
 #include "Layers/Layer.hpp"
-#include "Gui/ImGuiOpenGL.hpp"
+#include "Gui/ImGuiLayerGLFW.hpp"
 #include "Input/Input.h"
 
 namespace graphicApiFactory {
 
     class IGraphicApiFactory {
     public:
-        [[nodiscard]] virtual std::shared_ptr<window::IWindow> createWindow() const = 0;
-        [[nodiscard]] virtual std::shared_ptr<gui::ImGuiOpenGL> createGui() const = 0;
+        [[nodiscard]] virtual std::unique_ptr<window::IWindow> createWindow() const = 0;
+        [[nodiscard]] virtual gui::ImGuiLayerGLFW* createGui() const = 0;
     public:
         virtual ~IGraphicApiFactory() = default;
     };

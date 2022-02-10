@@ -6,9 +6,9 @@ set(DEBUG_LIB Azathoth.DebugTools.OpenGLToolsLib)
 
 set(HEADER
         ${PROJECT_SOURCE_DIR}/include/Window/IWindow.hpp
-        ${PROJECT_SOURCE_DIR}/include/Window/OpenGLWindow.hpp)
+        ${PROJECT_SOURCE_DIR}/include/Window/WindowGLFW.hpp)
 
-set(SOURCE OpenGLWindow.cpp)
+set(SOURCE WindowGLFW.cpp)
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 

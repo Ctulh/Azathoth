@@ -20,6 +20,8 @@ namespace layers {
         virtual void onUpdate() const {};
         virtual void onImGuiRender() const {};
         virtual void onEvent(events::Event&) const {};
+       // virtual void begin() const {}
+        //virtual void end() const {}
 
         inline std::string const& getName() const { return m_debugName; }
     protected:

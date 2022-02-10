@@ -2,14 +2,15 @@
 // Created by egor on 2/7/22.
 //
 
-#ifndef AZATHOTH_OPENGLWINDOW_HPP
-#define AZATHOTH_OPENGLWINDOW_HPP
+#ifndef AZATHOTH_WINDOWGLFW_HPP
+#define AZATHOTH_WINDOWGLFW_HPP
 
 #include "IWindow.hpp"
 #include "GLFW/glfw3.h"
 #include "OpenGLTools.hpp"
 #include "Logger/Logger.hpp"
 #include "Events/Event.hpp"
+#include "Renderer/IGraphicsContext.hpp"
 #include <iostream>
 
 namespace window {
@@ -40,9 +41,10 @@ namespace window {
         };
 
         WindowData m_data;
+        std::unique_ptr<renderer::IGraphicsContext> m_context;
         std::shared_ptr<windowType> m_window;
     };
 
 }
 
-#endif //AZATHOTH_OPENGLWINDOW_HPP
+#endif //AZATHOTH_WINDOWGLFW_HPP

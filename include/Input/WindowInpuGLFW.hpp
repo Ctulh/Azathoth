@@ -2,14 +2,14 @@
 // Created by egor on 2/9/22.
 //
 
-#ifndef AZATHOTH_GLFWWINDOWINPUT_HPP
-#define AZATHOTH_GLFWWINDOWINPUT_HPP
+#ifndef AZATHOTH_WINDOWINPUGLFW_HPP
+#define AZATHOTH_WINDOWINPUGLFW_HPP
 
 #include "Input.h"
 
 namespace input {
 
-    class GlfwWindowInput: public Input {
+    class WindowInpuGLFW: public Input {
     protected:
         std::pair<float, float> getMousePositionImpl() override;
         bool isMouseButtonPressedImpl(int button) override;
@@ -20,4 +20,4 @@ namespace input {
 
 }
 
-#endif //AZATHOTH_GLFWWINDOWINPUT_HPP
+#endif //AZATHOTH_WINDOWINPUGLFW_HPP

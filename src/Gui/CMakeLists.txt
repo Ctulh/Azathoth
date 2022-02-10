@@ -14,11 +14,11 @@ set(LOGGER_LIB Azathoth.LoggerLib)
 find_package(OpenGL REQUIRED)
 #------------------------------------------------------------------------------#
 #---------------------ADD SOURCE-----------------------------------------------#
-set(SOURCE ImGuiOpenGL.cpp)
+set(SOURCE ImGuiLayerGLFW.cpp)
 #------------------------------------------------------------------------------#
 #---------------------ADD HEADER-----------------------------------------------#
 set(HEADER
-           ${PROJECT_SOURCE_DIR}/include/Gui/ImGuiOpenGL.hpp)
+        ${PROJECT_SOURCE_DIR}/include/Gui/ImGuiLayerGLFW.hpp)
 #------------------------------------------------------------------------------#
 #------------------ADD LIBRARY-------------------------------------------------#
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})

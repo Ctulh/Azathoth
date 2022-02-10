@@ -15,6 +15,7 @@ set(GUI_LIB Azathoth.GuiLib)
 set(LAYERS_LIB Azathoth.LayersLib)
 set(INPUT_LIB Azathoth.InputLib)
 set(IMGUI_LIB ImGui)
+set(RENDERER_LIB Azathoth.RendererLib)
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
 #------------------------------------------------------------------------------#
@@ -33,7 +34,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
                                                 ${GUI_LIB}
                                                 ${LAYERS_LIB}
                                                 ${INPUT_LIB}
-                                                ${IMGUI_LIB})
+                                                ${IMGUI_LIB}
+                                                ${RENDERER_LIB})
 #------------------------------------------------------------------------------#
 #--------------------INCLUDE DIRS----------------------------------------------#
 target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)

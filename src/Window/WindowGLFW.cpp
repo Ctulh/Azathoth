@@ -1,18 +1,19 @@
 //
 // Created by egor on 2/7/22.
 //
-#include "Window/OpenGLWindow.hpp"
+#include "Window/WindowGLFW.hpp"
 #include "Logger/Logger.hpp"
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
 #include "Events/ApplicationEvent.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"
+#include "Renderer/GraphicsContextOpenGL.hpp"
 
 namespace window {
+
     void OpenglWindow::setEventCallback(eventCallbackFunction const& callback) {
         m_data.eventCallback = callback;
     }
-
 
     void OpenglWindow::setHeight(int height)  {
         m_data.height = height;
@@ -31,9 +32,7 @@ namespace window {
     }
 
     void OpenglWindow::draw() {
-        glfwSwapBuffers(m_window.get());
-        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        m_context->swapBuffers();
     }
 
     int OpenglWindow::getHeight() {
@@ -61,7 +60,10 @@ namespace window {
             m_window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(m_data.width, m_data.height, m_data.title->c_str(), NULL, NULL),
                                                    [](auto window){
                                                        logger::log_info("[OPENGL WINDOW POINTER] Destructed");});
-            glfwMakeContextCurrent(m_window.get());
+
+            m_context = std::make_unique<renderer::GraphicsContextOpenGL>(m_window);
+            m_context->init();
+
             glfwSetWindowUserPointer(m_window.get(), &m_data);
             logger::log_info("[OPENGL WINDOW] Detect \"{} {}\" video card", (const char*)(glGetString(GL_VENDOR)),
                              (const char*)(glGetString(GL_RENDERER)));
