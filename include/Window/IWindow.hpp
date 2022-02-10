@@ -18,6 +18,8 @@ namespace window {
         virtual std::shared_ptr<void> getNativeWindow() = 0;
         virtual void setHeight(int) = 0;
         virtual void setWidth(int) = 0;
+        virtual int getHeight() = 0;
+        virtual int getWidth() = 0;
         virtual void setTitle(std::string const&) = 0;
         virtual void draw() = 0;
         virtual void setEventCallback(eventCallbackFunction const&) = 0;

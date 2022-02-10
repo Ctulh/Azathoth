@@ -13,7 +13,43 @@ namespace window {
         m_data.eventCallback = callback;
     }
 
-    void OpenglWindow::lazyInit() {
+
+    void OpenglWindow::setHeight(int height)  {
+        m_data.height = height;
+    }
+
+    void OpenglWindow::setWidth(int width) {
+        m_data.width = width;
+    }
+
+    void OpenglWindow::setTitle(std::string const& title) {
+        m_data.title = std::make_unique<std::string>(title.c_str());
+    }
+
+    std::shared_ptr<void> OpenglWindow::getNativeWindow() {
+        return {static_cast<void*>(m_window.get()), [](auto window){}};
+    }
+
+    void OpenglWindow::draw() {
+        glfwSwapBuffers(m_window.get());
+        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    int OpenglWindow::getHeight() {
+        return m_data.height;
+    }
+
+    int OpenglWindow::getWidth() {
+        return m_data.width;
+    }
+
+    OpenglWindow::~OpenglWindow() {
+        logger::log_info("[OPENGL WINDOW] Destructed");
+        glfwDestroyWindow(m_window.get());
+    }
+
+    OpenglWindow::OpenglWindow() {
         if(not glfwInit()) {
             glfwSetErrorCallback(OpenGLTools::ErrorCallback);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -24,11 +60,11 @@ namespace window {
         if(not m_window) {
             m_window = std::shared_ptr<GLFWwindow>(glfwCreateWindow(m_data.width, m_data.height, m_data.title->c_str(), NULL, NULL),
                                                    [](auto window){
-                                                                   logger::log_info("[OPENGL WINDOW POINTER] Destructed");});
+                                                       logger::log_info("[OPENGL WINDOW POINTER] Destructed");});
             glfwMakeContextCurrent(m_window.get());
             glfwSetWindowUserPointer(m_window.get(), &m_data);
-           logger::log_info("[OPENGL WINDOW] Detect \"{} {}\" video card", (const char*)(glGetString(GL_VENDOR)),
-                                                                       (const char*)(glGetString(GL_RENDERER)));
+            logger::log_info("[OPENGL WINDOW] Detect \"{} {}\" video card", (const char*)(glGetString(GL_VENDOR)),
+                             (const char*)(glGetString(GL_RENDERER)));
             std::string tmp = (const char*)(glGetString(GL_VENDOR));
             if(m_window == NULL) {
                 logger::log_error("[OPENGL WINDOW] Window creation fails {} {} {}", m_data.width, m_data.height, m_data.title->c_str());
@@ -95,33 +131,4 @@ namespace window {
             });
         }
     }
-
-    void OpenglWindow::setHeight(int height)  {
-        m_data.height = height;
-    }
-
-    void OpenglWindow::setWidth(int width) {
-        m_data.width = width;
-    }
-
-    void OpenglWindow::setTitle(std::string const& title) {
-        m_data.title = std::make_unique<std::string>(title.c_str());
-    }
-
-    std::shared_ptr<void> OpenglWindow::getNativeWindow() {
-        lazyInit();
-        return {static_cast<void*>(m_window.get()), [](auto window){}};
-    }
-
-    void OpenglWindow::draw() {
-           glfwSwapBuffers(m_window.get());
-           glfwMakeContextCurrent(m_window.get());
-           glfwPollEvents();
-    }
-
-    OpenglWindow::~OpenglWindow() {
-        logger::log_info("[OPENGL WINDOW] Destructed");
-        glfwDestroyWindow(m_window.get());
-    }
-
 }

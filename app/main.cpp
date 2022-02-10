@@ -18,7 +18,7 @@ public:
     ExampleLayer(): Layer("Example") {}
 
     void onUpdate() const override {
-        logger::log_info("ExampleLayer: onUpdate");
+       /// logger::log_info("ExampleLayer: onUpdate");
 
         if(input::Input::isKeyPressed(KEY_TAB)) {
             logger::log_info("ExampleLayer: Tab Pressed");
@@ -29,9 +29,15 @@ public:
     void onEvent(events::Event& event) const override {
        // logger::log_info("ExampleLayer: {}", event.toString());
     };
+
+    ~ExampleLayer() {
+        logger::log_info("[EXAMPLE LAYER] Destructed");
+    }
 };
 
     using graphicApiFactory::OpenGLFactory;
+
+
 
 int main() {
     OpenGLFactory factory;

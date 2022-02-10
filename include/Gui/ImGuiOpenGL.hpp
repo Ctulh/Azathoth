@@ -7,22 +7,22 @@
 
 #include <atomic>
 
-#include "IGui.hpp"
-#include "GLFW/glfw3.h"
+#include "Layers/Layer.hpp"
+
 
 namespace gui {
 
-    class ImGuiOpenGL: public IGui {
+class ImGuiOpenGL: public layers::Layer {
     public:
-        ImGuiOpenGL() = default;
+        ImGuiOpenGL();
         ~ImGuiOpenGL();
     public:
-        bool isInited() override;
-        void setWindow(std::shared_ptr<void> window) override;
-        void draw() override;
-    private:
-        bool m_isInited = false;
-        std::shared_ptr<GLFWwindow> m_window;
+        void onAttach() const override;
+        void onDetach() const override;
+        void onImGuiRender() const override;
+
+        void begin();
+        void end();
     };
 
 }

@@ -5,11 +5,12 @@
 #include "Application/Application.hpp"
 #include "Logger/Logger.hpp"
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "GLFW/glfw3.h"
 
 namespace application {
 
-    std::shared_ptr<IWindow> Application::getWindow() {
-        return m_window;
+    window::IWindow& Application::getWindow() {
+        return *m_window;
     }
 
     Application* Application::getInstance() {
@@ -24,23 +25,25 @@ namespace application {
 
     void Application::pushLayer(layers::Layer* layer) {
         m_layerStack->pushLayer(layer);
+        layer->onAttach();
     }
 
     void Application::pushOverlay(layers::Layer* layer) {
         m_layerStack->pushOverlay(layer);
+        layer->onAttach();
     }
 
     Application::Application(IGraphicApiFactory const& factory):
-            m_window(factory.createWindow()),
-            m_gui(factory.createGui()) {
-
+            m_window(factory.createWindow()) {
+        m_instance = this;
+        m_gui = new gui::ImGuiOpenGL;
         m_window->setWidth(1600);
         m_window->setHeight(900);
         m_window->setTitle("Test\n");
 
         m_window->setEventCallback(BIND_EVENT_FN(onEvent));
         m_layerStack = std::make_shared<layers::LayerStack>();
-        m_instance = this;
+        pushOverlay(m_gui);
     }
 
     void Application::onUpdate() {
@@ -53,7 +56,6 @@ namespace application {
 
         events::EventDispatcher dispatcher(event);
         dispatcher.dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
-
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
             (*--it)->onEvent(event);
             if (event.isHandled()) {
@@ -71,19 +73,26 @@ namespace application {
             logger::log_error("[RENDERER] Window is NUll");
             return;
         }
-        m_gui->setWindow(m_window->getNativeWindow());
+        //m_gui->setWindow(m_window->getNativeWindow());
         //m_window2->getWindow();
         logger::log_info("[RENDERER] Renderer is running");
-
+        glfwMakeContextCurrent((GLFWwindow*)(m_window.get()->getNativeWindow().get()));
         while(m_isRunning.test(std::memory_order_acquire)) {
-            m_gui->draw();
-            m_window->draw();
+          //  m_gui->draw();
+            glfwPollEvents();
 
-            //auto [x,y] = input::Input::getMousePosition();
-            //logger::log_info("Mouse {}, {}",x ,y);
+
+            m_gui->begin();
+            for (layers::Layer* layer: (*m_layerStack.get())) {
+                layer->onImGuiRender();
+            }
+            m_gui->end();
+
             for (layers::Layer* layer: (*m_layerStack.get())) {
                 layer->onUpdate();
             }
+
+            m_window->draw();
         }
     }
 
@@ -96,8 +105,8 @@ namespace application {
         while(m_isRunning.test(std::memory_order_acquire)) {
             m_isRunning.clear(std::memory_order_release);
         }
-        m_gui.reset();
-        m_window.reset();
+       // m_gui.reset();
+       // m_window.reset();
         logger::log_info("[RENDERER] Renderer is stopped");
     }
 

@@ -19,19 +19,20 @@ namespace window {
         using windowType = GLFWwindow;
 
     public:
-        OpenglWindow() = default;
+        OpenglWindow();
         ~OpenglWindow();
     public:
         void setHeight(int height) override;
         void setWidth(int width) override;
+        int getHeight() override;
+        int getWidth() override;
         void setTitle(std::string const& title) override;
         std::shared_ptr<void> getNativeWindow() override;
         void draw() override;
         void setEventCallback(eventCallbackFunction const&) override;
     private:
-        void lazyInit();
-    private:
         struct WindowData {
+            WindowData(): title(std::make_unique<std::string>("test")), width(1600), height(900) {}
             std::unique_ptr<std::string> title;
             int width, height;
 

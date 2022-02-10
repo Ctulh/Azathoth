@@ -18,6 +18,7 @@ namespace layers {
         virtual void onAttach() const {};
         virtual void onDetach() const {};
         virtual void onUpdate() const {};
+        virtual void onImGuiRender() const {};
         virtual void onEvent(events::Event&) const {};
 
         inline std::string const& getName() const { return m_debugName; }

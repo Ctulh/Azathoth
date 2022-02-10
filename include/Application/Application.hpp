@@ -9,10 +9,9 @@
 #include "Layers/LayerStack.hpp"
 #include "Events/ApplicationEvent.hpp"
 #include "Window/IWindow.hpp"
-#include "Gui/IGui.hpp"
 #include "GraphicApiFactory/IGraphicApiFactory.hpp"
 #include "Input/Input.h"
-
+#include "Gui/ImGuiOpenGL.hpp"
 #include <memory>
 #include <atomic>
 
@@ -26,7 +25,7 @@ namespace application {
     using layers::Layer;
     using events::Event;
     using input::Input;
-    using gui::IGui;
+
 
     class Application: public IApplication {
     public:
@@ -38,10 +37,10 @@ namespace application {
         void onEvent(Event&) override;
         void pushLayer(Layer*) override;
         void pushOverlay(Layer*) override;
-        std::shared_ptr<IWindow> getWindow();
+        IWindow& getWindow();
     private:
         std::shared_ptr<IWindow> m_window;
-        std::shared_ptr<IGui> m_gui;
+        gui::ImGuiOpenGL* m_gui;
         std::shared_ptr<LayerStack> m_layerStack;
         std::atomic_flag m_isRunning = false;
     private:

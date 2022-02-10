@@ -25,12 +25,12 @@ namespace graphicApiFactory {
             logger::log_info("[OPENGL FACTORY] Created Window");
             //__INPUT INITIALIZATION
             auto input = std::make_shared<input::GlfwWindowInput>();
-             input::Input::setInstance(input);
+            input::Input::setInstance(input);
             //_____________
             return std::make_shared<OpenglWindow>();
         }
 
-        [[nodiscard]] std::shared_ptr<gui::IGui> createGui() const override {
+        [[nodiscard]] std::shared_ptr<gui::ImGuiOpenGL> createGui() const override {
             logger::log_info("[OPENGL FACTORY] Created GUI");
             return std::make_shared<gui::ImGuiOpenGL>();
         }
