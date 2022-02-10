@@ -43,6 +43,12 @@ namespace application {
         m_instance = this;
     }
 
+    void Application::onUpdate() {
+        for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
+            (*--it)->onUpdate();
+        }
+    }
+
     void Application::onEvent(events::Event& event) {
 
         events::EventDispatcher dispatcher(event);
@@ -73,8 +79,8 @@ namespace application {
             m_gui->draw();
             m_window->draw();
 
-            auto [x,y] = input::Input::getMousePosition();
-            logger::log_info("Mouse {}, {}",x ,y);
+            //auto [x,y] = input::Input::getMousePosition();
+            //logger::log_info("Mouse {}, {}",x ,y);
             for (layers::Layer* layer: (*m_layerStack.get())) {
                 layer->onUpdate();
             }

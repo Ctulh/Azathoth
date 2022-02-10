@@ -9,6 +9,7 @@
 #include <thread>
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
 #include "Layers/Layer.hpp"
+#include "Input/KeyCodes.hpp"
 
 using application::Application;
 
@@ -17,7 +18,12 @@ public:
     ExampleLayer(): Layer("Example") {}
 
     void onUpdate() const override {
-       // logger::log_info("ExampleLayer: onUpdate");
+        logger::log_info("ExampleLayer: onUpdate");
+
+        if(input::Input::isKeyPressed(KEY_TAB)) {
+            logger::log_info("ExampleLayer: Tab Pressed");
+        }
+
     }
 
     void onEvent(events::Event& event) const override {

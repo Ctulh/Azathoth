@@ -45,6 +45,7 @@ namespace application {
         std::shared_ptr<LayerStack> m_layerStack;
         std::atomic_flag m_isRunning = false;
     private:
+        void onUpdate();
         bool onWindowClose(events::WindowCloseEvent& event);
         static Application* m_instance;
     };
