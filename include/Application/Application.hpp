@@ -12,6 +12,7 @@
 #include "GraphicApiFactory/IGraphicApiFactory.hpp"
 #include "Input/Input.h"
 #include "Gui/ImGuiLayerGLFW.hpp"
+#include "Renderer/Shader.hpp"
 #include <memory>
 #include <atomic>
 
@@ -25,6 +26,7 @@ namespace application {
     using layers::Layer;
     using events::Event;
     using input::Input;
+    using renderer::Shader;
 
 
     class Application: public IApplication {
@@ -41,7 +43,9 @@ namespace application {
     private:
         std::unique_ptr<IWindow> m_window;
         std::unique_ptr<LayerStack> m_layerStack;
+        std::unique_ptr<Shader> m_shader;
         std::atomic_flag m_isRunning = false;
+        unsigned int m_vertexArray, m_vertexBuffer, m_indexBuffer;
     private:
         void onUpdate();
         bool onWindowClose(events::WindowCloseEvent& event);

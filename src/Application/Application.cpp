@@ -5,7 +5,8 @@
 #include "Application/Application.hpp"
 #include "Logger/Logger.hpp"
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
-#include "GLFW/glfw3.h"
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
 
 namespace application {
 
@@ -37,6 +38,52 @@ namespace application {
         m_layerStack = std::make_unique<layers::LayerStack>();
         m_layerStack->pushOverlay(factory.createGui());
         m_window->setEventCallback(BIND_EVENT_FN(onEvent));
+
+        glGenVertexArrays(1, &m_vertexArray);
+        glBindVertexArray(m_vertexArray);
+
+        glGenBuffers(1, &m_vertexBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER ,m_vertexBuffer);
+
+        float verticies[3 * 3] = {
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                0.0f, 0.5f, 0.0f
+        };
+
+        glBufferData(GL_ARRAY_BUFFER, sizeof(verticies), verticies, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, nullptr);
+
+        glGenBuffers(1, &m_indexBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_indexBuffer);
+
+        unsigned int indicies[] = {0,1,2};
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicies), indicies, GL_STATIC_DRAW);
+
+        std::string vertexSource = R"(
+                #version 330 core
+
+                layout(location = 0) in vec3 a_position;
+                out vec3 v_Position;
+
+                void main() {
+                    v_Position = a_position;
+                    gl_Position = vec4(a_position, 1.0);
+                }
+        )";
+        std::string fragmentSource = R"(
+                #version 330 core
+
+                layout(location = 0) out vec4 color;
+                in vec3 v_Position;
+
+                void main() {
+                   color = vec4(v_Position * 0.5 + 0.5, 1.0);
+                }
+        )";
+
+        m_shader = std::make_unique<Shader>(vertexSource, fragmentSource);
     }
 
     void Application::onUpdate() {
@@ -68,22 +115,26 @@ namespace application {
         }
         logger::log_info("[RENDERER] Renderer is running");
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
+        auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
         while(m_isRunning.test(std::memory_order_acquire)) {
             glfwPollEvents();
 
+            m_shader->bind();
+            glBindVertexArray(m_vertexArray);
+            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
-            dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"])->begin();
+            gui->begin();
             for (layers::Layer* layer: (*m_layerStack)) {
                 layer->onImGuiRender();
             }
-            dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"])->end();
+            gui->end();
 
             for (layers::Layer* layer: (*m_layerStack)) {
                 layer->onUpdate();
             }
 
             m_window->draw();
-            glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+            glClearColor(0.1f, 0.1f, 0.1f, 1.00f);
             glClear(GL_COLOR_BUFFER_BIT);
         }
     }

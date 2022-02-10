@@ -1,9 +1,15 @@
 set(LIB_NAME Azathoth.RendererLib)
 
-set(SOURCE GraphicsContextOpenGL.cpp)
+set(SOURCE GraphicsContextOpenGL.cpp
+           VertexBuffer.cpp
+           IndexBuffer.cpp
+           Shader.cpp)
 
 set(HEADER ${PROJECT_SOURCE_DIR}/include/Renderer/IGraphicsContext.hpp
-           ${PROJECT_SOURCE_DIR}/include/Renderer/GraphicsContextOpenGL.hpp)
+           ${PROJECT_SOURCE_DIR}/include/Renderer/GraphicsContextOpenGL.hpp
+           ${PROJECT_SOURCE_DIR}/include/Renderer/Shader.hpp
+           ${PROJECT_SOURCE_DIR}/include/Renderer/VertexBuffer.hpp
+           ${PROJECT_SOURCE_DIR}/include/Renderer/IndexBuffer.hpp)
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 

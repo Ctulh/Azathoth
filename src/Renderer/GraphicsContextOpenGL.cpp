@@ -4,6 +4,7 @@
 #include "Renderer/GraphicsContextOpenGL.hpp"
 #include "DebugTools/OpenGLTools/OpenGLTools.hpp"
 #include "DebugTools/CommonTools/AzathothAssert.hpp"
+#include "Logger/Logger.hpp"
 #include "glad/glad.h"
 
 #include <GLFW/glfw3.h>
@@ -18,11 +19,11 @@ namespace renderer {
         glfwMakeContextCurrent(m_window.get());
         int status = gladLoadGLLoader((GLADloadproc) glfwGetProcAddress);
         AZATHOTH_ASSERT(status, "Glad Initialize failed");
+        logger::log_info("[OPENGL WINDOW] Detect \"{} {}\" video card", (const char*)(glGetString(GL_VENDOR)),
+                         (const char*)(glGetString(GL_RENDERER)));
     }
 
     void GraphicsContextOpenGL::swapBuffers() {
         glfwSwapBuffers(m_window.get());
-        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
-        glClear(GL_COLOR_BUFFER_BIT);
     }
 }
