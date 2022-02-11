@@ -14,6 +14,7 @@ set(APPLICATION_LIB Azathoth.ApplicationLib)
 set(EVENTS_LIB Azathoth.EventsLib)
 set(LAYERS_LIB Azathoth.LayersLib)
 set(LOGGER_LIB Azathoth.LoggerLib)
+set(RENDERER_LIB Azathoth.RendererLib)
 
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
@@ -30,6 +31,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${GRAPHIC_API}
         ${EVENTS_LIB}
         ${LAYERS_LIB}
         ${LOGGER_LIB}
+        ${RENDERER_LIB}
         )
 
 #------------------------------------------------------------------------------#

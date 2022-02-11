@@ -12,6 +12,7 @@
 #include "Events/ApplicationEvent.hpp"
 #include "Renderer/IVertexBuffer.hpp"
 #include "Renderer/IIndexBuffer.hpp"
+#include "Renderer/VertexArray.hpp"
 #include "Layers/LayerStack.hpp"
 #include "Window/IWindow.hpp"
 #include "IApplication.hpp"
@@ -24,6 +25,7 @@ namespace application {
     using graphicApiFactory::IGraphicApiFactory;
     using renderer::IVertexBuffer;
     using renderer::IIndexBuffer;
+    using renderer::VertexArray;
     using layers::LayerStack;
     using window::IWindow;
     using layers::Layer;
@@ -43,13 +45,13 @@ namespace application {
         void pushOverlay(Layer*) override;
         IWindow& getWindow();
     private:
-        std::unique_ptr<IVertexBuffer> m_vertexBuffer;
-        std::unique_ptr<IIndexBuffer> m_indexBuffer;
+        std::shared_ptr<IVertexBuffer> m_vertexBuffer;
+        std::shared_ptr<IIndexBuffer> m_indexBuffer;
         std::unique_ptr<IWindow> m_window;
         std::unique_ptr<LayerStack> m_layerStack;
         std::unique_ptr<IShader> m_shader;
+        std::shared_ptr<VertexArray> m_vertexArray;
         std::atomic_flag m_isRunning = false;
-        unsigned int m_vertexArray;
     private:
         void onUpdate();
         bool onWindowClose(events::WindowCloseEvent& event);

@@ -3,7 +3,6 @@
 //
 #include "OpenGL/Window/WindowGLFW.hpp"
 #include "Logger/Logger.hpp"
-#include "DebugTools/AzathothAssert.hpp"
 #include "Events/ApplicationEvent.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Events/MouseEvent.hpp"

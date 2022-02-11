@@ -8,27 +8,13 @@
 #include "Renderer/BufferLayout.hpp"
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
+#include "Renderer/VertexBufferOpenGL.hpp"
+#include "Renderer/Renderer.hpp"
+#include "Renderer/RenderCommand.hpp"
+#include "Renderer/IndexBufferOpenGL.hpp"
 
 namespace application {
 using renderer::ShaderDataType;
-
-    static GLenum ShaderDataTypeToOpenGLBaseType(renderer::ShaderDataType type) {
-        switch (type) {
-            case ShaderDataType::Float:   return GL_FLOAT;
-            case ShaderDataType::Float2:  return GL_FLOAT;
-            case ShaderDataType::Float3:  return GL_FLOAT;
-            case ShaderDataType::Float4:  return GL_FLOAT;
-            case ShaderDataType::Mat3:    return GL_FLOAT;
-            case ShaderDataType::Mat4:    return GL_FLOAT;
-            case ShaderDataType::Int:     return GL_INT;
-            case ShaderDataType::Int2:    return GL_INT;
-            case ShaderDataType::Int3:    return GL_INT;
-            case ShaderDataType::Int4:    return GL_INT;
-            case ShaderDataType::Bool:    return GL_BOOL;
-        }
-        AZATHOTH_ASSERT(false, "Unknown ShaderDataType");
-        return 0;
-    }
 
     window::IWindow& Application::getWindow() {
         return *m_window;
@@ -59,58 +45,40 @@ using renderer::ShaderDataType;
         m_layerStack->pushOverlay(factory.createGui());
         m_window->setEventCallback(BIND_EVENT_FN(onEvent));
 
-        glGenVertexArrays(1, &m_vertexArray);
-        glBindVertexArray(m_vertexArray);
-
+        m_vertexArray.reset(renderer::VertexArray::create());
 
         float verticies[ ] = {
-                -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-                0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                0.0f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
+                -0.5f, -0.5f, 0.0f,
+                0.5f, -0.5f, 0.0f,
+                0.5f, 0.5f, 0.0f,
+                -0.5f, 0.5f, 0.0f
         };
 
         m_vertexBuffer.reset(renderer::IVertexBuffer::create(verticies, sizeof(verticies)));
         //m_vertexBuffer->bind();
-
-
-
-        uint32_t indices[3] = {0,1,2};
+        uint32_t indices[6] = {0,1,2, 2, 3, 0};
         {
             renderer::BufferLayout layout = {
-                    {renderer::ShaderDataType::Float3, "a_Position"},
-                    {renderer::ShaderDataType::Float4, "a_Color"},
+                    {renderer::ShaderDataType::Float3, "a_Position"}
             };
 
             m_vertexBuffer->setLayout(layout);
         }
-        uint32_t index = 0;
-        for(auto const& item: m_vertexBuffer->getLayout()) {
-            glEnableVertexAttribArray(index);
-            glVertexAttribPointer(
-                    index,
-                    item.getComponentCount(),
-                    ShaderDataTypeToOpenGLBaseType(item.type),
-                    item.normalized ? GL_TRUE : GL_FALSE,
-                    m_vertexBuffer->getLayout().getStride(),
-                    (const void*)item.offset);
-            index++;
-        }
+
+        m_vertexArray->addVertexBuffer(m_vertexBuffer);
 
         m_indexBuffer.reset(IIndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
-        //m_indexBuffer->bind();
+        m_vertexArray->setIndexBuffer(m_indexBuffer);
 
         std::string vertexSource = R"(
                 #version 330 core
 
                 layout(location = 0) in vec3 a_Position;
-                layout(location = 1) in vec4 a_Color;
 
                 out vec3 v_Position;
-                out vec4 v_Color;
 
                 void main() {
                     v_Position = a_Position;
-                    v_Color = a_Color;
                     gl_Position = vec4(a_Position, 1.0);
                 }
         )";
@@ -119,10 +87,9 @@ using renderer::ShaderDataType;
 
                 layout(location = 0) out vec4 color;
                 in vec3 v_Position;
-                in vec4 v_Color;
 
                 void main() {
-                   color = vec4(v_Color);
+                   color = vec4(v_Position+0.5*0.5, 1.0);
                 }
         )";
 
@@ -161,10 +128,15 @@ using renderer::ShaderDataType;
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
         while(m_isRunning.test(std::memory_order_acquire)) {
             glfwPollEvents();
+            renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
+            renderer::RenderCommand::clear();
 
+
+            renderer::Renderer::beginScene();
             m_shader->bind();
-            glBindVertexArray(m_vertexArray);
-            glDrawElements(GL_TRIANGLES, m_indexBuffer->getCount(), GL_UNSIGNED_INT, nullptr);
+            renderer::Renderer::Submit(m_vertexArray);
+            renderer::Renderer::endScene();
+
 
             gui->begin();
             for (layers::Layer* layer: (*m_layerStack)) {
@@ -177,8 +149,6 @@ using renderer::ShaderDataType;
             }
 
             m_window->draw();
-            glClearColor(0.1f, 0.1f, 0.1f, 1.00f);
-            glClear(GL_COLOR_BUFFER_BIT);
         }
     }
 
