@@ -15,7 +15,7 @@ set(HEADER ${PROJECT_SOURCE_DIR}/include/Logger/Logger.hpp
            ${PROJECT_SOURCE_DIR}/include/Logger/SpdLogger.hpp
            ${PROJECT_SOURCE_DIR}/include/Logger/SpdLoggerProxy.hpp)
 
-add_library(${LIB_NAME} ${SOURCE} ${HEADER})
+add_library(${LIB_NAME} SHARED ${SOURCE} ${HEADER})
 
 
 target_include_directories(${LIB_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)

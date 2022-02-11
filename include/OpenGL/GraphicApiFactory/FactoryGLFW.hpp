@@ -9,6 +9,7 @@
 #include "OpenGL/Window/WindowGLFW.hpp"
 #include "OpenGL/Input/WindowInpuGLFW.hpp"
 #include "Logger/Logger.hpp"
+#include "Renderer/ShaderOpenGL.hpp"
 #include "OpenGL/Gui/ImGuiLayerGLFW.hpp"
 
 namespace graphicApiFactory {
@@ -33,6 +34,11 @@ namespace graphicApiFactory {
         [[nodiscard]] gui::ImGuiLayerGLFW* createGui() const override {
             logger::log_info("[OPENGL FACTORY] Created GUI");
             return new gui::ImGuiLayerGLFW;
+        }
+
+        std::unique_ptr<renderer::IShader> createShader(const std::string &vert, const std::string &fragment) const override {
+            logger::log_info("[OPENGL FACTORY] Created Shader");
+            return std::make_unique<renderer::ShaderOpenGL>(vert, fragment);
         }
     };
 

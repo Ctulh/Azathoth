@@ -13,10 +13,11 @@ namespace renderer {
     public:
         ~IIndexBuffer() = default;
     public:
-        virtual void bind() = 0;
-        virtual void unBind() = 0;
+        virtual void bind() const = 0;
+        virtual void unBind() const = 0;
+        virtual uint32_t getCount() const = 0;
 
-     //   static IIndexBuffer* create(uint32_t*, uint32_t);
+        static IIndexBuffer* create(uint32_t*, uint32_t);
     };
 
 }

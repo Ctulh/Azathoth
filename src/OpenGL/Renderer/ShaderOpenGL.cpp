@@ -1,7 +1,7 @@
 //
 // Created by egor on 2/10/22.
 //
-#include "Renderer/Shader.hpp"
+#include "Renderer/ShaderOpenGL.hpp"
 #include "Logger/Logger.hpp"
 #include "DebugTools/AzathothAssert.hpp"
 
@@ -10,7 +10,7 @@
 
 namespace renderer {
 
-    Shader::Shader(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc) {
+    ShaderOpenGL::ShaderOpenGL(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc) {
         GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
         const GLchar *source = vertexShaderSrc.c_str();
@@ -86,15 +86,15 @@ namespace renderer {
         glDetachShader(m_rendererId, fragmentShader);
     }
 
-    Shader::~Shader() {
+    ShaderOpenGL::~ShaderOpenGL() {
        glDeleteProgram(m_rendererId);
     }
 
-    void Shader::bind() const {
+    void ShaderOpenGL::bind() const {
         glUseProgram(m_rendererId);
     }
 
-    void Shader::unBind() const {
+    void ShaderOpenGL::unBind() const {
         glUseProgram(0);
     }
 

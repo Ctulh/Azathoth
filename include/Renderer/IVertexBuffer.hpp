@@ -5,7 +5,9 @@
 #ifndef AZATHOTH_IVERTEXBUFFER_HPP
 #define AZATHOTH_IVERTEXBUFFER_HPP
 
-#include <stdint.h>
+#include <cstdint>
+
+#include "BufferLayout.hpp"
 
 namespace renderer {
 
@@ -13,10 +15,13 @@ namespace renderer {
     public:
         virtual ~IVertexBuffer() = default;
     public:
-        virtual void bind() = 0;
-        virtual void unBind() = 0;
+        virtual void bind() const = 0;
+        virtual void unBind() const = 0;
 
-       // static IVertexBuffer* create(float*, uint32_t);
+        virtual void setLayout(BufferLayout const&) = 0;
+        virtual BufferLayout const& getLayout() const = 0;
+
+        static IVertexBuffer* create(float*, uint32_t);
     };
 
 }
