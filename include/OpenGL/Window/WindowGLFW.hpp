@@ -13,6 +13,7 @@
 #include "Renderer/IGraphicsContext.hpp"
 #include <iostream>
 
+
 namespace window {
 
     class OpenglWindow: public IWindow {
@@ -29,7 +30,9 @@ namespace window {
         int getWidth() override;
         void setTitle(std::string const& title) override;
         std::shared_ptr<void> getNativeWindow() override;
-        void draw() override;
+
+        void onUpdate() const override;
+
         void setEventCallback(eventCallbackFunction const&) override;
     private:
         struct WindowData {

@@ -24,6 +24,9 @@ namespace renderer {
     }
 
     void GraphicsContextOpenGL::swapBuffers() {
+        glfwPollEvents();
         glfwSwapBuffers(m_window.get());
     }
+
+
 }

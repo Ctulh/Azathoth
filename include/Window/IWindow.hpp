@@ -21,7 +21,7 @@ namespace window {
         virtual int getHeight() = 0;
         virtual int getWidth() = 0;
         virtual void setTitle(std::string const&) = 0;
-        virtual void draw() = 0;
+        virtual void onUpdate() const = 0;
         virtual void setEventCallback(eventCallbackFunction const&) = 0;
     public:
         virtual ~IWindow() = default;

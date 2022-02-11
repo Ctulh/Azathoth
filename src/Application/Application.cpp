@@ -127,7 +127,6 @@ using renderer::ShaderDataType;
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
         while(m_isRunning.test(std::memory_order_acquire)) {
-            glfwPollEvents();
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
             renderer::RenderCommand::clear();
 
@@ -148,7 +147,7 @@ using renderer::ShaderDataType;
                 layer->onUpdate();
             }
 
-            m_window->draw();
+            m_window->onUpdate();
         }
     }
 

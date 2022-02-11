@@ -30,7 +30,7 @@ namespace window {
         return {static_cast<void*>(m_window.get()), [](auto window){}};
     }
 
-    void OpenglWindow::draw() {
+    void OpenglWindow::onUpdate() const {
         m_context->swapBuffers();
     }
 
