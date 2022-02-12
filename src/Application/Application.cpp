@@ -3,7 +3,7 @@
 //
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "Application/Application.hpp"
@@ -12,6 +12,8 @@
 #include "Renderer/BufferLayout.hpp"
 #include "Renderer/VertexBufferOpenGL.hpp"
 #include "Renderer/Renderer.hpp"
+#include "Input/Input.h"
+#include "Input/KeyCodes.hpp"
 #include "Renderer/RenderCommand.hpp"
 #include "Renderer/IndexBufferOpenGL.hpp"
 
@@ -25,6 +27,40 @@ using renderer::ShaderDataType;
     Application* Application::getInstance() {
         AZATHOTH_ASSERT(m_instance, "null instance");
         return m_instance;
+    }
+
+    bool Application::onArrow(events::KeyEvent &event) {
+        if(not input::Input::isKeyPressed(KEY_LEFT_ALT)) {
+            if(input::Input::isKeyPressed(KEY_LEFT)) {
+                *m_model = glm::translate(*m_model, glm::vec3(-0.1f, 0.0f, 0.0f));
+                return true;
+            } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
+                *m_model = glm::translate(*m_model, glm::vec3(0.1f, 0.0f, 0.0f));
+                return true;
+            } else if(input::Input::isKeyPressed(KEY_UP)) {
+                *m_model = glm::translate(*m_model, glm::vec3(0.0f, -0.1f, 0.0f));
+                return true;
+            } else if(input::Input::isKeyPressed(KEY_DOWN)) {
+                *m_model = glm::translate(*m_model, glm::vec3(0.0f, 0.1f, 0.0f));
+                return true;
+            }
+        }
+        else {
+            if(input::Input::isKeyPressed(KEY_LEFT)) {
+                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.0f, -0.1f, 0.0f));
+                return true;
+            } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
+                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.0f, 0.1f, 0.0f));
+                return true;
+            } else if(input::Input::isKeyPressed(KEY_UP)) {
+                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.1f, 0.0f, 0.0f));
+                return true;
+            } else if(input::Input::isKeyPressed(KEY_DOWN)) {
+                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(-0.1f, 0.0f, 0.0f));
+                return true;
+            }
+        }
+        return false;
     }
 
     bool Application::onWindowClose(events::WindowCloseEvent &event) {
@@ -46,7 +82,7 @@ using renderer::ShaderDataType;
         m_layerStack = std::make_unique<layers::LayerStack>();
         m_layerStack->pushOverlay(factory.createGui());
         m_window->setEventCallback(BIND_EVENT_FN(onEvent));
-
+        m_model = std::make_shared<glm::mat4>(1.0f);
         m_vertexArray.reset(renderer::VertexArray::create());
 
         float verticies[ ] = {
@@ -84,6 +120,7 @@ using renderer::ShaderDataType;
     void Application::onEvent(events::Event& event) {
         events::EventDispatcher dispatcher(event);
         dispatcher.dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
+        dispatcher.dispatch<events::KeyPressedEvent>(BIND_EVENT_FN(onArrow));
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
             (*--it)->onEvent(event);
             if (event.isHandled()) {
@@ -104,7 +141,7 @@ using renderer::ShaderDataType;
         logger::log_info("[RENDERER] Renderer is running");
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
-        glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+        glm::mat4 Projection = glm::perspective(glm::radians(45.0f), m_window->getWidth() * 1.0f / m_window->getHeight(), 0.1f, 100.0f);
 
         glm::mat4 View       = glm::lookAt(
                 glm::vec3(4,3,3), // Камера находится в мировых координатах (4,3,3)
@@ -112,9 +149,8 @@ using renderer::ShaderDataType;
                 glm::vec3(0,1,0)  // "Голова" находится сверху
         );
 
-        glm::mat4 Model = glm::mat4(1.0f);
 
-        glm::mat4 MVP = Projection * View * Model;
+        glm::mat4 MVP = Projection * View ;
 
 
         while(m_isRunning.test(std::memory_order_acquire)) {
@@ -124,6 +160,8 @@ using renderer::ShaderDataType;
 
             renderer::Renderer::beginScene();
             m_shader->setUniformMatrix4f("MV", &MVP[0][0]);
+            m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
+           // m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
             renderer::Renderer::endScene();

@@ -7,9 +7,11 @@
 
 #include <memory>
 #include <atomic>
+#include <glm/glm.hpp>
 
 #include "GraphicApiFactory/IGraphicApiFactory.hpp"
 #include "Events/ApplicationEvent.hpp"
+#include "Events/KeyEvent.hpp"
 #include "Renderer/IVertexBuffer.hpp"
 #include "Renderer/IIndexBuffer.hpp"
 #include "Renderer/VertexArray.hpp"
@@ -52,8 +54,10 @@ namespace application {
         std::unique_ptr<IShader> m_shader;
         std::shared_ptr<VertexArray> m_vertexArray;
         std::atomic_flag m_isRunning = false;
+        std::shared_ptr<glm::mat4> m_model;
     private:
         void onUpdate();
+        bool onArrow(events::KeyEvent& event);
         bool onWindowClose(events::WindowCloseEvent& event);
         static Application* m_instance;
     };

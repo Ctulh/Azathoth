@@ -25,6 +25,7 @@ namespace tools {
         while(std::getline(file, buffer)) {
             fileData += buffer + '\n';
         }
+        file.close();
         return fileData;
     }
 
