@@ -7,7 +7,7 @@
 
 #include "Window/IWindow.hpp"
 #include "GLFW/glfw3.h"
-#include "OpenGL/DebugTools/OpenGLTools.hpp"
+#include "OpenGL/Tools/OpenGLTools.hpp"
 #include "Logger/Logger.hpp"
 #include "Events/Event.hpp"
 #include "Renderer/IGraphicsContext.hpp"

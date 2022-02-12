@@ -3,7 +3,7 @@
 //
 #include "Renderer/VertexArrayOpenGL.hpp"
 #include "Renderer/VertexArray.hpp"
-#include "DebugTools/AzathothAssert.hpp"
+#include "Tools/AzathothAssert.hpp"
 
 #include <glad/glad.h>
 

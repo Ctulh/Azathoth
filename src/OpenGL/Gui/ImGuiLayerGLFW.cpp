@@ -5,7 +5,7 @@
 #include "OpenGL/Gui/ImGuiLayerGLFW.hpp"
 
 #include "Logger/Logger.hpp"
-#include "DebugTools/AzathothAssert.hpp"
+#include "Tools/AzathothAssert.hpp"
 #include "Application/Application.hpp"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_glfw.h"

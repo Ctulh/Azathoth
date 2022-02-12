@@ -13,6 +13,8 @@ namespace renderer {
     public:
         virtual void bind() const = 0;
         virtual void unBind() const = 0;
+
+        virtual void setUniformMatrix4f(std::string const&, const float*) {}
     };
 
 }

@@ -2,8 +2,8 @@
 // Created by egor on 2/10/22.
 //
 #include "OpenGL/Renderer/GraphicsContextOpenGL.hpp"
-#include "OpenGL/DebugTools/OpenGLTools.hpp"
-#include "DebugTools/AzathothAssert.hpp"
+#include "OpenGL/Tools/OpenGLTools.hpp"
+#include "Tools/AzathothAssert.hpp"
 #include "Logger/Logger.hpp"
 #include "glad/glad.h"
 

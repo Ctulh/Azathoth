@@ -1,7 +1,7 @@
 //
 // Created by egor on 2/7/22.
 //
-#include "OpenGL/DebugTools/OpenGLTools.hpp"
+#include "OpenGL/Tools/OpenGLTools.hpp"
 #include "Logger/Logger.hpp"
 
 

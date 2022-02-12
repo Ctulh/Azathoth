@@ -7,7 +7,7 @@
 #include "Application/Application.hpp"
 #include "OpenGL/GraphicApiFactory/FactoryGLFW.hpp"
 #include <thread>
-#include "DebugTools/AzathothAssert.hpp"
+#include "Tools/AzathothAssert.hpp"
 #include "Layers/Layer.hpp"
 #include "Input/KeyCodes.hpp"
 

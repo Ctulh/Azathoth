@@ -3,64 +3,71 @@
 //
 #include "Renderer/ShaderOpenGL.hpp"
 #include "Logger/Logger.hpp"
-#include "DebugTools/AzathothAssert.hpp"
+#include "Tools/AzathothAssert.hpp"
+#include "Tools/File.hpp"
 
 #include "glad/glad.h"
 #include <vector>
 
 namespace renderer {
 
-    ShaderOpenGL::ShaderOpenGL(const std::string &vertexShaderSrc, const std::string &fragmentShaderSrc) {
-        GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    ShaderOpenGL::ShaderOpenGL(std::string const& vertexFileName, std::string const& fragmentFileName) {
+        GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexFileName);
+        logger::log_info("[SHADER] Compiled vertex shader");
+        GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentFileName);
+        logger::log_info("[SHADER] Compiled fragment shader");
 
-        const GLchar *source = vertexShaderSrc.c_str();
-        glShaderSource(vertexShader, 1, &source, 0);
+        createProgram({vertexShader, fragmentShader});
+    }
 
-        glCompileShader(vertexShader);
+    ShaderOpenGL::~ShaderOpenGL() {
+       glDeleteProgram(m_rendererId);
+    }
+
+    void ShaderOpenGL::bind() const {
+        glUseProgram(m_rendererId);
+    }
+
+    void ShaderOpenGL::unBind() const {
+        glUseProgram(0);
+    }
+
+    void ShaderOpenGL::setUniformMatrix4f(std::string const& uniformName, const float* matrix4f) {
+        glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, matrix4f);
+    }
+
+    uint32_t ShaderOpenGL::compileShader(unsigned int shaderType, std::string const& shaderPath) const {
+        GLuint shaderId = glCreateShader(shaderType);
+
+        auto shaderData = tools::File(shaderPath).read();
+        const GLchar *source = shaderData.c_str();
+        glShaderSource(shaderId, 1, &source, nullptr);
+
+        glCompileShader(shaderId);
 
         GLint isCompiled = 0;
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
+        glGetShaderiv(shaderId, GL_COMPILE_STATUS, &isCompiled);
         if(isCompiled == GL_FALSE)
         {
             GLint maxLength = 0;
-            glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+            glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &maxLength);
             std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-            glDeleteShader(vertexShader);
+            glGetShaderInfoLog(shaderId, maxLength, &maxLength, &infoLog[0]);
+            glDeleteShader(shaderId);
 
             logger::log_error("[SHADER] {}", infoLog.data());
-            AZATHOTH_ASSERT(isCompiled, "Vertex shader compile failed");
-            return;
+            AZATHOTH_ASSERT(isCompiled, " Shader compile failed, shader: " + shaderType);
+            return 0;
         }
-        logger::log_info("[SHADER] Created vertex shader");
+        return shaderId;
+    }
 
-        GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-        source = fragmentShaderSrc.c_str();
-        glShaderSource(fragmentShader, 1, &source, 0);
-
-        glCompileShader(fragmentShader);
-
-        glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-        if (isCompiled == GL_FALSE)
-        {
-            GLint maxLength = 0;
-            glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
-            std::vector<GLchar> infoLog(maxLength);
-            glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
-            glDeleteShader(fragmentShader);
-            glDeleteShader(vertexShader);
-
-            logger::log_error("[SHADER] {}", infoLog.data());
-            AZATHOTH_ASSERT(isCompiled, "Fragment shader compile failed");
-            return;
-        }
-        logger::log_info("[SHADER] Created fragment shader");
-
+    void ShaderOpenGL::createProgram(std::initializer_list<uint32_t> shaders) {
         m_rendererId = glCreateProgram();
 
-        glAttachShader(m_rendererId, vertexShader);
-        glAttachShader(m_rendererId, fragmentShader);
+        for(auto const& shaderId: shaders) {
+            glAttachShader(m_rendererId, shaderId);
+        }
 
         glLinkProgram(m_rendererId);
 
@@ -74,28 +81,29 @@ namespace renderer {
             std::vector<GLchar> infoLog(maxLength);
             glGetProgramInfoLog(m_rendererId, maxLength, &maxLength, &infoLog[0]);
             glDeleteProgram(m_rendererId);
-            glDeleteShader(vertexShader);
-            glDeleteShader(fragmentShader);
+
+            for(auto const& shaderId: shaders) {
+                glDeleteShader(shaderId);
+            }
 
             logger::log_error("[SHADER] {}", infoLog.data());
             AZATHOTH_ASSERT(isCompiled, "Shader link failed");
             return;
         }
 
-        glDetachShader(m_rendererId, vertexShader);
-        glDetachShader(m_rendererId, fragmentShader);
+        for(auto const& shaderId: shaders) {
+            glDetachShader(m_rendererId, shaderId);
+        }
     }
 
-    ShaderOpenGL::~ShaderOpenGL() {
-       glDeleteProgram(m_rendererId);
-    }
-
-    void ShaderOpenGL::bind() const {
-        glUseProgram(m_rendererId);
-    }
-
-    void ShaderOpenGL::unBind() const {
-        glUseProgram(0);
+    int ShaderOpenGL::getUniformLocation(std::string const& uniformName) {
+        if(m_uniformIndexes.contains(uniformName)) {
+            return m_uniformIndexes.at(uniformName);
+        }
+        GLint location = glGetUniformLocation(m_rendererId, uniformName.c_str());
+        m_uniformIndexes[uniformName] = location;
+        AZATHOTH_ASSERT(location, "Cant find uniform with name: " + uniformName);
+        return location;
     }
 
 }

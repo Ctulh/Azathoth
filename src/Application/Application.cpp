@@ -1,13 +1,15 @@
 //
 // Created by egor on 2/9/22.
 //
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "Application/Application.hpp"
 #include "Logger/Logger.hpp"
-#include "DebugTools/AzathothAssert.hpp"
+#include "Tools/AzathothAssert.hpp"
 #include "Renderer/BufferLayout.hpp"
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
 #include "Renderer/VertexBufferOpenGL.hpp"
 #include "Renderer/Renderer.hpp"
 #include "Renderer/RenderCommand.hpp"
@@ -70,30 +72,7 @@ using renderer::ShaderDataType;
         m_indexBuffer.reset(IIndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
         m_vertexArray->setIndexBuffer(m_indexBuffer);
 
-        std::string vertexSource = R"(
-                #version 330 core
-
-                layout(location = 0) in vec3 a_Position;
-
-                out vec3 v_Position;
-
-                void main() {
-                    v_Position = a_Position;
-                    gl_Position = vec4(a_Position, 1.0);
-                }
-        )";
-        std::string fragmentSource = R"(
-                #version 330 core
-
-                layout(location = 0) out vec4 color;
-                in vec3 v_Position;
-
-                void main() {
-                   color = vec4(v_Position+0.5*0.5, 1.0);
-                }
-        )";
-
-        m_shader = factory.createShader(vertexSource, fragmentSource);
+        m_shader = factory.createShader("shader.vert", "shader.frag");
     }
 
     void Application::onUpdate() {
@@ -103,7 +82,6 @@ using renderer::ShaderDataType;
     }
 
     void Application::onEvent(events::Event& event) {
-
         events::EventDispatcher dispatcher(event);
         dispatcher.dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
@@ -126,12 +104,26 @@ using renderer::ShaderDataType;
         logger::log_info("[RENDERER] Renderer is running");
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
+        glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+
+        glm::mat4 View       = glm::lookAt(
+                glm::vec3(4,3,3), // Камера находится в мировых координатах (4,3,3)
+                glm::vec3(0,0,0), // И направлена в начало координат
+                glm::vec3(0,1,0)  // "Голова" находится сверху
+        );
+
+        glm::mat4 Model = glm::mat4(1.0f);
+
+        glm::mat4 MVP = Projection * View * Model;
+
+
         while(m_isRunning.test(std::memory_order_acquire)) {
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
             renderer::RenderCommand::clear();
 
 
             renderer::Renderer::beginScene();
+            m_shader->setUniformMatrix4f("MV", &MVP[0][0]);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
             renderer::Renderer::endScene();

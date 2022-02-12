@@ -9,7 +9,7 @@
 #include <string>
 #include <cstdint>
 
-#include "DebugTools/AzathothAssert.hpp"
+#include "Tools/AzathothAssert.hpp"
 
 namespace renderer {
 

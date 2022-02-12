@@ -7,9 +7,9 @@ message ( "     BINARY_DIR = ${CMAKE_CURRENT_BINARY_DIR}" )
 
 set(LOGGER_LIB Azathoth.LoggerLib)
 
-set(SOURCE ${PROJECT_SOURCE_DIR}/src/OpenGL/DebugTools/OpenGLTools.cpp)
+set(SOURCE ${PROJECT_SOURCE_DIR}/src/OpenGL/Tools/OpenGLTools.cpp)
 
-set(HEADER ${PROJECT_SOURCE_DIR}/include/OpenGL/DebugTools/OpenGLTools.hpp)
+set(HEADER ${PROJECT_SOURCE_DIR}/include/OpenGL/Tools/OpenGLTools.hpp)
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 

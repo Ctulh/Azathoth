@@ -1,4 +1,4 @@
-add_subdirectory(DebugTools)
+add_subdirectory(Tools)
 add_subdirectory(Gui)
 add_subdirectory(Input)
 add_subdirectory(Window)
