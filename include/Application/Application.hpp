@@ -18,6 +18,7 @@
 #include "Layers/LayerStack.hpp"
 #include "Window/IWindow.hpp"
 #include "IApplication.hpp"
+#include "Camera/Camera.hpp"
 
 
 namespace application {
@@ -30,6 +31,7 @@ namespace application {
     using renderer::VertexArray;
     using layers::LayerStack;
     using window::IWindow;
+    using camera::Camera;
     using layers::Layer;
     using events::Event;
     using renderer::IShader;
@@ -54,6 +56,7 @@ namespace application {
         std::unique_ptr<IShader> m_shader;
         std::shared_ptr<VertexArray> m_vertexArray;
         std::atomic_flag m_isRunning = false;
+        std::unique_ptr<Camera> m_camera;
         std::shared_ptr<glm::mat4> m_model;
     private:
         void onUpdate();

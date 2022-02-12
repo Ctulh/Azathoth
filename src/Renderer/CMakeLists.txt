@@ -10,8 +10,7 @@ set(HEADER ${PROJECT_SOURCE_DIR}/include/Renderer/IGraphicsContext.hpp
            ${PROJECT_SOURCE_DIR}/include/Renderer/IShader.hpp
            ${PROJECT_SOURCE_DIR}/include/Renderer/VertexArray.hpp
            ${PROJECT_SOURCE_DIR}/include/Renderer/BufferLayout.hpp
-           ${PROJECT_SOURCE_DIR}/include/Renderer/Renderer.hpp
-        )
+           ${PROJECT_SOURCE_DIR}/include/Renderer/Renderer.hpp)
 
 set(SOURCE Renderer.cpp)
 

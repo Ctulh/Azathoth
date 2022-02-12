@@ -4,6 +4,7 @@ add_subdirectory(Input)
 add_subdirectory(Window)
 add_subdirectory(GraphicApiFactory)
 add_subdirectory(Renderer)
+add_subdirectory(Camera)
 
 set(LIB_NAME Azathoth.OpenGL.Lib)
 
@@ -13,8 +14,10 @@ set(GUI_LIB Azathoth.OpenGL.GuiLib)
 set(INPUT_LIB Azathoth.OpenGL.InputLib)
 set(RENDERER_LIB Azathoth.OpenGL.RendererLib)
 set(WINDOW_LIB Azathoth.OpenGL.WindowLib)
+set(CAMERA_LIB Azathoth.OpenGL.CameraLib)
 set(IMGUI_LIB ImGui)
 set(GLAD_LIB glad)
+
 
 set(HEADER AzathothOpenGL.hpp)
 
@@ -27,6 +30,7 @@ target_link_libraries(${LIB_NAME} PRIVATE ${TOOLS_LIB}
         ${RENDERER_LIB}
         ${WINDOW_LIB}
         ${IMGUI_LIB}
+        ${CAMERA_LIB}
         ${GLAD_LIB}
         glad)
 

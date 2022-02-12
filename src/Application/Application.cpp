@@ -16,6 +16,7 @@
 #include "Input/KeyCodes.hpp"
 #include "Renderer/RenderCommand.hpp"
 #include "Renderer/IndexBufferOpenGL.hpp"
+#include "Camera/CameraOpenGL.hpp"
 
 namespace application {
 using renderer::ShaderDataType;
@@ -30,33 +31,40 @@ using renderer::ShaderDataType;
     }
 
     bool Application::onArrow(events::KeyEvent &event) {
+        static float fov = 45.0f;
         if(not input::Input::isKeyPressed(KEY_LEFT_ALT)) {
             if(input::Input::isKeyPressed(KEY_LEFT)) {
-                *m_model = glm::translate(*m_model, glm::vec3(-0.1f, 0.0f, 0.0f));
+                //*m_model = glm::translate(*m_model, glm::vec3(-0.1f, 0.0f, 0.0f));
+                m_camera->moveTo({-0.1f, 0.0f, 0.0f});
                 return true;
             } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
-                *m_model = glm::translate(*m_model, glm::vec3(0.1f, 0.0f, 0.0f));
+                m_camera->moveTo({0.1f, 0.0f, 0.0f});
                 return true;
             } else if(input::Input::isKeyPressed(KEY_UP)) {
-                *m_model = glm::translate(*m_model, glm::vec3(0.0f, -0.1f, 0.0f));
+                m_camera->moveTo({0.0f, 0.1f, 0.0f});
                 return true;
             } else if(input::Input::isKeyPressed(KEY_DOWN)) {
-                *m_model = glm::translate(*m_model, glm::vec3(0.0f, 0.1f, 0.0f));
+                m_camera->moveTo({0.0f, -0.1f, 0.0f});
                 return true;
             }
         }
         else {
             if(input::Input::isKeyPressed(KEY_LEFT)) {
                 *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.0f, -0.1f, 0.0f));
+                //m_camera->setFov();
                 return true;
             } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
                 *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.0f, 0.1f, 0.0f));
                 return true;
             } else if(input::Input::isKeyPressed(KEY_UP)) {
-                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.1f, 0.0f, 0.0f));
+                fov -= 0.5f;
+                m_camera->setFov(fov);
+                //*m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.1f, 0.0f, 0.0f));
                 return true;
             } else if(input::Input::isKeyPressed(KEY_DOWN)) {
-                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(-0.1f, 0.0f, 0.0f));
+                fov += 0.5f;
+                m_camera->setFov(fov);
+                //*m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(-0.1f, 0.0f, 0.0f));
                 return true;
             }
         }
@@ -77,7 +85,8 @@ using renderer::ShaderDataType;
     }
 
     Application::Application(IGraphicApiFactory const& factory):
-            m_window(factory.createWindow()) {
+            m_window(factory.createWindow()),
+            m_camera(std::make_unique<camera::CameraOpenGL>()) {
         m_instance = this;
         m_layerStack = std::make_unique<layers::LayerStack>();
         m_layerStack->pushOverlay(factory.createGui());
@@ -89,12 +98,14 @@ using renderer::ShaderDataType;
                 -0.5f, -0.5f, 0.0f,
                 0.5f, -0.5f, 0.0f,
                 0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f
+                -0.5f, 0.5f, 0.0f,
+                0.5f, -0.5f, -1.0f,
+                0.5f, 0.5f, -1.0f
         };
 
         m_vertexBuffer.reset(renderer::IVertexBuffer::create(verticies, sizeof(verticies)));
         //m_vertexBuffer->bind();
-        uint32_t indices[6] = {0,1,2, 2, 3, 0};
+        uint32_t indices[12] = {0,1,2, 2, 3, 0, 1, 4, 2, 2, 4, 5};
         {
             renderer::BufferLayout layout = {
                     {renderer::ShaderDataType::Float3, "a_Position"}
@@ -108,7 +119,7 @@ using renderer::ShaderDataType;
         m_indexBuffer.reset(IIndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
         m_vertexArray->setIndexBuffer(m_indexBuffer);
 
-        m_shader = factory.createShader("shader.vert", "shader.frag");
+        m_shader = factory.createShader("shaderColored.vert", "shaderColored.frag");
     }
 
     void Application::onUpdate() {
@@ -141,25 +152,15 @@ using renderer::ShaderDataType;
         logger::log_info("[RENDERER] Renderer is running");
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
-        glm::mat4 Projection = glm::perspective(glm::radians(45.0f), m_window->getWidth() * 1.0f / m_window->getHeight(), 0.1f, 100.0f);
 
-        glm::mat4 View       = glm::lookAt(
-                glm::vec3(4,3,3), // Камера находится в мировых координатах (4,3,3)
-                glm::vec3(0,0,0), // И направлена в начало координат
-                glm::vec3(0,1,0)  // "Голова" находится сверху
-        );
-
-
-        glm::mat4 MVP = Projection * View ;
-
-
+        glEnable(GL_DEPTH_TEST);
         while(m_isRunning.test(std::memory_order_acquire)) {
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
             renderer::RenderCommand::clear();
 
 
             renderer::Renderer::beginScene();
-            m_shader->setUniformMatrix4f("MV", &MVP[0][0]);
+            m_shader->setUniformMatrix4f("MV", &m_camera->getMat4()[0][0]);
             m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
            // m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
             m_shader->bind();
