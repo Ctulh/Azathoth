@@ -53,7 +53,7 @@ namespace application {
         std::shared_ptr<IIndexBuffer> m_indexBuffer;
         std::unique_ptr<IWindow> m_window;
         std::unique_ptr<LayerStack> m_layerStack;
-        std::unique_ptr<IShader> m_shader;
+        std::shared_ptr<IShader> m_shader;
         std::shared_ptr<VertexArray> m_vertexArray;
         std::atomic_flag m_isRunning = false;
         std::unique_ptr<Camera> m_camera;

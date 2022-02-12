@@ -16,7 +16,7 @@ namespace camera {
         virtual void setFov(float) = 0;
         virtual void moveTo(glm::vec3 const&) = 0;
 
-        virtual glm::mat4 const& getMat4() = 0;
+        virtual float const* const getPointer() = 0;
     public:
         ~Camera() = default;
     };

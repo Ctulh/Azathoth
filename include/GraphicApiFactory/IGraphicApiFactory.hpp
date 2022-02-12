@@ -16,7 +16,7 @@ namespace graphicApiFactory {
     public:
         [[nodiscard]] virtual std::unique_ptr<window::IWindow> createWindow() const = 0;
         [[nodiscard]] virtual gui::ImGuiLayerGLFW* createGui() const = 0;
-        virtual std::unique_ptr<renderer::IShader> createShader(std::string const& vert, std::string const& fragment) const = 0;
+        [[nodiscard]] virtual std::shared_ptr<renderer::IShader> createShader(std::string const& vert, std::string const& fragment) const = 0;
     public:
         virtual ~IGraphicApiFactory() = default;
     };

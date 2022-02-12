@@ -6,8 +6,8 @@
 
 namespace renderer {
 
-    void Renderer::beginScene() {
-
+    void Renderer::beginScene(std::shared_ptr<IShader>& shader, float const* const cameraMatrix) {
+        shader->setUniformMatrix4f("CameraMatrix", cameraMatrix);
     }
 
     void Renderer::endScene() {

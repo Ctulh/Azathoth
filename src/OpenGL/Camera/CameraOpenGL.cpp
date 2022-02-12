@@ -34,9 +34,9 @@ namespace camera {
         clearViewRelevance();
     }
 
-    const glm::mat4 &CameraOpenGL::getMat4() {
+    float const* const CameraOpenGL::getPointer() {
         calculateMatrix();
-        return *m_lastProjectionViewMatrix;
+        return &(*m_lastProjectionViewMatrix)[0][0];
     }
 
     void CameraOpenGL::calculateViewMatrix() {

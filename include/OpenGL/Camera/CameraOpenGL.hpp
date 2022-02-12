@@ -21,7 +21,7 @@ namespace camera {
         void setFov(float) override;
         void moveTo(glm::vec3 const&) override;
 
-        glm::mat4 const& getMat4() override;
+        float const* const getPointer() override;
     private:
         struct Projection {
             Projection() {

@@ -159,10 +159,8 @@ using renderer::ShaderDataType;
             renderer::RenderCommand::clear();
 
 
-            renderer::Renderer::beginScene();
-            m_shader->setUniformMatrix4f("MV", &m_camera->getMat4()[0][0]);
+            renderer::Renderer::beginScene(m_shader, m_camera->getPointer());
             m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
-           // m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
             renderer::Renderer::endScene();

@@ -36,9 +36,9 @@ namespace graphicApiFactory {
             return new gui::ImGuiLayerGLFW;
         }
 
-        std::unique_ptr<renderer::IShader> createShader(const std::string &vert, const std::string &fragment) const override {
+        std::shared_ptr<renderer::IShader> createShader(const std::string &vert, const std::string &fragment) const override {
             logger::log_info("[OPENGL FACTORY] Created Shader");
-            return std::make_unique<renderer::ShaderOpenGL>(vert, fragment);
+            return std::make_shared<renderer::ShaderOpenGL>(vert, fragment);
         }
     };
 
