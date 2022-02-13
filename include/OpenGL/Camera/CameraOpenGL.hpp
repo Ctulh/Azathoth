@@ -21,6 +21,7 @@ namespace camera {
         void setRatio(float) override;
         void setFov(float) override;
         void moveTo(glm::vec3 const&) override;
+        void changeFov(float) override;
 
         float const* const getPointer() override;
     private:
@@ -38,7 +39,7 @@ namespace camera {
             float maxDistance;
         };
         struct View {
-            View(): pos(0, 0, 3), lookAt(0, 0, 0), headPos(0, 1, 0) {}
+            View(): pos(0, 0, 3), lookAt(0, 0, -1), headPos(0, 1, 0) {}
         public:
             glm::vec3 pos;
             glm::vec3 lookAt;

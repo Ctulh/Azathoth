@@ -36,6 +36,14 @@ namespace renderer {
         glUniformMatrix4fv(getUniformLocation(uniformName), 1, GL_FALSE, matrix4f);
     }
 
+    void ShaderOpenGL::setUniformVec3f(std::string const& uniformName, const float* vec3) {
+        glUniform3fv(getUniformLocation(uniformName), 1, vec3);
+    }
+
+    void ShaderOpenGL::setUniformVec4f(std::string const& uniformName, const float* vec4) {
+        glUniform4fv(getUniformLocation(uniformName), 1, vec4);
+    }
+
     uint32_t ShaderOpenGL::compileShader(unsigned int shaderType, std::string const& shaderPath) const {
         GLuint shaderId = glCreateShader(shaderType);
 

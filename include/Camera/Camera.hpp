@@ -15,6 +15,7 @@ namespace camera {
         virtual void setRatio(float) = 0;
         virtual void setFov(float) = 0;
         virtual void moveTo(glm::vec3 const&) = 0;
+        virtual void changeFov(float) = 0;
 
         virtual float const* const getPointer() = 0;
     public:

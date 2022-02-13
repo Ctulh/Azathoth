@@ -79,7 +79,7 @@ using renderer::ShaderDataType;
         m_indexBuffer.reset(IIndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
         m_vertexArray->setIndexBuffer(m_indexBuffer);
 
-        m_shader = factory.createShader("shaderColored.vert", "shaderColored.frag");
+        m_shader = factory.createShader("shader.vert", "shader.frag");
     }
 
     void Application::onUpdate() {
@@ -112,6 +112,10 @@ using renderer::ShaderDataType;
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
 
+        float lightPos [] = {0,2,3,0};
+        float kd [] = {1,1,1};
+        float ld [] = {1,1,1};
+
         glEnable(GL_DEPTH_TEST);
         while(m_isRunning.test(std::memory_order_acquire)) {
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
@@ -120,6 +124,9 @@ using renderer::ShaderDataType;
 
             renderer::Renderer::beginScene(m_shader, m_camera->getPointer());
             m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
+            m_shader->setUniformVec3f("LightPosition", lightPos);
+            m_shader->setUniformVec3f("Kd", kd);
+            m_shader->setUniformVec3f("Ld", ld);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
             renderer::Renderer::endScene();

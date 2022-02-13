@@ -10,9 +10,9 @@
 namespace camera {
 
     CameraOpenGL::CameraOpenGL():
-                                    m_lastProjectionViewMatrix(std::make_unique<glm::mat4>()),
-                                    m_lastProjectionMatrix(std::make_unique<glm::mat4>()),
-                                    m_lastViewMatrix(std::make_unique<glm::mat4>()),
+                                    m_lastProjectionViewMatrix(std::make_unique<glm::mat4>(0.0f)),
+                                    m_lastProjectionMatrix(std::make_unique<glm::mat4>(0.0f)),
+                                    m_lastViewMatrix(std::make_unique<glm::mat4>(0.0f)),
                                     m_projectionData(std::make_unique<Projection>()),
                                     m_viewData(std::make_unique<View>()) {
         logger::log_info("[CAMERA] Created successful");
@@ -38,6 +38,14 @@ namespace camera {
         clearViewRelevance();
     }
 
+    void CameraOpenGL::changeFov(float fov) {
+        m_projectionData->fovAngle += fov;
+        if(m_projectionData->fovAngle < 1.0f) {
+            m_projectionData->fovAngle = 1.0f;
+        }
+        clearProjectionRelevance();
+    }
+
     float const* const CameraOpenGL::getPointer() {
         calculateMatrix();
         return &(*m_lastProjectionViewMatrix)[0][0];
@@ -49,7 +57,7 @@ namespace camera {
         }
         *m_lastViewMatrix = glm::lookAt(
                 m_viewData->pos,     // Камера находится в мировых координатах (4,3,3)
-                m_viewData->lookAt,  // И направлена в начало координат
+                m_viewData->pos + m_viewData->lookAt,  // И направлена в начало координат
                 m_viewData->headPos  // "Голова" находится сверху
         );
     }

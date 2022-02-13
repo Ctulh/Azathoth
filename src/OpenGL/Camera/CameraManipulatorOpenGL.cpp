@@ -19,20 +19,21 @@ namespace camera {
         events::EventDispatcher dispatcher(event);
         dispatcher.dispatch<events::MouseMovedEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onMouseMoved));
         dispatcher.dispatch<events::KeyPressedEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onKeyPressed));
+        dispatcher.dispatch<events::MouseScrolledEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onMouseScrolled));
     }
 
     bool CameraManipulatorOpenGL::onKeyPressed(KeyPressedEvent& keyPressedEvent) {
         if(not input::Input::isKeyPressed(KEY_LEFT_ALT)) {
-            if(input::Input::isKeyPressed(KEY_LEFT)) {
+            if(keyPressedEvent.getKeyCode() == KEY_LEFT) {
                 m_camera->moveTo({-0.1f, 0.0f, 0.0f});
                 return true;
-            } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
+            } else if(keyPressedEvent.getKeyCode() == KEY_RIGHT) {
                 m_camera->moveTo({0.1f, 0.0f, 0.0f});
                 return true;
-            } else if(input::Input::isKeyPressed(KEY_UP)) {
+            } else if(keyPressedEvent.getKeyCode() == KEY_UP) {
                 m_camera->moveTo({0.0f, 0.1f, 0.0f});
                 return true;
-            } else if(input::Input::isKeyPressed(KEY_DOWN)) {
+            } else if(keyPressedEvent.getKeyCode() == KEY_DOWN) {
                 m_camera->moveTo({0.0f, -0.1f, 0.0f});
                 return true;
             }
@@ -40,8 +41,21 @@ namespace camera {
         return false;
     }
 
+    int CameraManipulatorOpenGL::getSign(int x) {
+        int mask;
+        if (x != 0) {
+            mask = 1;
+        }
+        mask = 0;
+        return mask | (x >> 31);
+    }
+
+    bool CameraManipulatorOpenGL::onMouseScrolled(MouseScrolledEvent& mouseScrolledEvent) {
+        m_camera->changeFov(-(mouseScrolledEvent.getYOffset() * 1.5f));
+        return true;
+    }
+
     bool CameraManipulatorOpenGL::onMouseMoved(MouseMovedEvent& mouseMovedEvent) {
-        return false;
     }
 
 }

@@ -16,6 +16,7 @@ namespace camera {
     using layers::Layer;
     using events::MouseMovedEvent;
     using events::KeyPressedEvent;
+    using events::MouseScrolledEvent;
     using events::Event;
 
     class CameraManipulatorOpenGL : public Layer {
@@ -26,6 +27,8 @@ namespace camera {
     private:
         bool onMouseMoved(MouseMovedEvent&);
         bool onKeyPressed(KeyPressedEvent&);
+        bool onMouseScrolled(MouseScrolledEvent&);
+        int getSign(int);
     private:
         std::shared_ptr<Camera> m_camera;
     };
