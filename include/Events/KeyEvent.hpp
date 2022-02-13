@@ -7,6 +7,8 @@
 
 #include "Event.hpp"
 
+#include <sstream>
+
 namespace events {
 
     class KeyEvent: public Event {

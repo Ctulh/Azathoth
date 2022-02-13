@@ -10,6 +10,7 @@
 #include "OpenGL/Input/WindowInpuGLFW.hpp"
 #include "Logger/Logger.hpp"
 #include "Renderer/ShaderOpenGL.hpp"
+#include "Camera/CameraManipulatorOpenGL.hpp"
 #include "OpenGL/Gui/ImGuiLayerGLFW.hpp"
 
 namespace graphicApiFactory {
@@ -39,6 +40,11 @@ namespace graphicApiFactory {
         std::shared_ptr<renderer::IShader> createShader(const std::string &vert, const std::string &fragment) const override {
             logger::log_info("[OPENGL FACTORY] Created Shader");
             return std::make_shared<renderer::ShaderOpenGL>(vert, fragment);
+        }
+
+        layers::Layer* createCameraManipulator(std::shared_ptr<camera::Camera>& camera) const override {
+            logger::log_info("[OPENGL FACTORY] Created camera manipulator");
+            return new camera::CameraManipulatorOpenGL(camera);
         }
     };
 

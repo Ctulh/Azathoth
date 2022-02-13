@@ -10,6 +10,7 @@
 #include "Tools/AzathothAssert.hpp"
 #include "Layers/Layer.hpp"
 #include "Input/KeyCodes.hpp"
+#include "Input/MouseCodes.hpp"
 
 using application::Application;
 
@@ -26,7 +27,7 @@ public:
 
     }
 
-    void onEvent(events::Event& event) const override {
+    void onEvent(events::Event& event) override {
        // logger::log_info("ExampleLayer: {}", event.toString());
     };
 

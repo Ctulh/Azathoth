@@ -23,8 +23,6 @@
 
 namespace application {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
-
     using graphicApiFactory::IGraphicApiFactory;
     using renderer::IVertexBuffer;
     using renderer::IIndexBuffer;
@@ -56,11 +54,10 @@ namespace application {
         std::shared_ptr<IShader> m_shader;
         std::shared_ptr<VertexArray> m_vertexArray;
         std::atomic_flag m_isRunning = false;
-        std::unique_ptr<Camera> m_camera;
+        std::shared_ptr<Camera> m_camera;
         std::shared_ptr<glm::mat4> m_model;
     private:
         void onUpdate();
-        bool onArrow(events::KeyEvent& event);
         bool onWindowClose(events::WindowCloseEvent& event);
         static Application* m_instance;
     };

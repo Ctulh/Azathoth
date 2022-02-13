@@ -2,8 +2,10 @@
 // Created by egor on 2/12/22.
 //
 
-#include "Camera/CameraOpenGL.hpp"
 #include <glm/gtc/matrix_transform.hpp>
+
+#include "Camera/CameraOpenGL.hpp"
+#include "Logger/Logger.hpp"
 
 namespace camera {
 
@@ -12,7 +14,9 @@ namespace camera {
                                     m_lastProjectionMatrix(std::make_unique<glm::mat4>()),
                                     m_lastViewMatrix(std::make_unique<glm::mat4>()),
                                     m_projectionData(std::make_unique<Projection>()),
-                                    m_viewData(std::make_unique<View>()) {}
+                                    m_viewData(std::make_unique<View>()) {
+        logger::log_info("[CAMERA] Created successful");
+    }
 
     void CameraOpenGL::setPosition(glm::vec3 const& pos) {
         m_viewData->pos = pos;
@@ -77,5 +81,9 @@ namespace camera {
     void CameraOpenGL::clearViewRelevance() {
         m_isViewValid.clear();
         m_isMatrixValid.clear();
+    }
+
+    CameraOpenGL::~CameraOpenGL() {
+        logger::log_info("[CAMERA] Destructed");
     }
 }

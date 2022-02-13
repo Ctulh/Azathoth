@@ -19,7 +19,7 @@ namespace layers {
         virtual void onDetach() const {};
         virtual void onUpdate() const {};
         virtual void onImGuiRender() const {};
-        virtual void onEvent(events::Event&) const {};
+        virtual void onEvent(events::Event&) {};
        // virtual void begin() const {}
         //virtual void end() const {}
 

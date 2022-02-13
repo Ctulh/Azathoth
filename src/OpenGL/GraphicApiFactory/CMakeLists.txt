@@ -24,7 +24,8 @@ add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 set_target_properties(${LIB_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 #------------------------------------------------------------------------------#
 #---------------------INCLUDE DIRECTORIES--------------------------------------#
-target_include_directories(${LIB_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${LIB_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include
+                                              ${PROJECT_SOURCE_DIR}/include/OpenGL)
 #------------------------------------------------------------------------------#
 #---------------------LINK COMPONENTS------------------------------------------#
 #target_link_libraries(${LIB_NAME} PRIVATE ${WINDOW_LIB}

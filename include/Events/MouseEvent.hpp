@@ -6,6 +6,8 @@
 #define AZATHOTH_MOUSEEVENT_HPP
 
 #include "Event.hpp"
+#include <utility>
+#include <sstream>
 
 namespace events {
 
@@ -14,6 +16,7 @@ namespace events {
         MouseMovedEvent(float x, float y) : m_mouseX(x), m_mouseY(y) {}
         inline float getX() const { return m_mouseX; }
         inline float getY() const { return m_mouseY; }
+        inline std::pair<int, int> getPos() const {return {m_mouseX, m_mouseY};}
 
         std::string toString() const override {
             std::stringstream ss;

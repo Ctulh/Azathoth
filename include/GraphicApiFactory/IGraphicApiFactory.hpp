@@ -8,6 +8,7 @@
 #include "OpenGL/Gui/ImGuiLayerGLFW.hpp" //TODO fix this include. WTF?
 #include "Window/IWindow.hpp"
 #include "Renderer/IShader.hpp"
+#include "Camera/Camera.hpp"
 #include "Layers/Layer.hpp"
 
 namespace graphicApiFactory {
@@ -16,6 +17,7 @@ namespace graphicApiFactory {
     public:
         [[nodiscard]] virtual std::unique_ptr<window::IWindow> createWindow() const = 0;
         [[nodiscard]] virtual gui::ImGuiLayerGLFW* createGui() const = 0;
+        [[nodiscard]] virtual layers::Layer* createCameraManipulator(std::shared_ptr<camera::Camera>&) const = 0;
         [[nodiscard]] virtual std::shared_ptr<renderer::IShader> createShader(std::string const& vert, std::string const& fragment) const = 0;
     public:
         virtual ~IGraphicApiFactory() = default;

@@ -15,6 +15,7 @@ namespace camera {
     class CameraOpenGL: public Camera {
     public:
         CameraOpenGL();
+        ~CameraOpenGL();
     public:
         void setPosition(glm::vec3 const&) override;
         void setRatio(float) override;

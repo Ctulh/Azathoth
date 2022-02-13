@@ -12,10 +12,10 @@
 #include "Renderer/BufferLayout.hpp"
 #include "Renderer/VertexBufferOpenGL.hpp"
 #include "Renderer/Renderer.hpp"
-#include "Input/Input.h"
-#include "Input/KeyCodes.hpp"
 #include "Renderer/RenderCommand.hpp"
+#include "Tools/FunctionBinder.hpp"
 #include "Renderer/IndexBufferOpenGL.hpp"
+#include "Camera/CameraManipulatorOpenGL.hpp"
 #include "Camera/CameraOpenGL.hpp"
 
 namespace application {
@@ -28,47 +28,6 @@ using renderer::ShaderDataType;
     Application* Application::getInstance() {
         AZATHOTH_ASSERT(m_instance, "null instance");
         return m_instance;
-    }
-
-    bool Application::onArrow(events::KeyEvent &event) {
-        static float fov = 45.0f;
-        if(not input::Input::isKeyPressed(KEY_LEFT_ALT)) {
-            if(input::Input::isKeyPressed(KEY_LEFT)) {
-                //*m_model = glm::translate(*m_model, glm::vec3(-0.1f, 0.0f, 0.0f));
-                m_camera->moveTo({-0.1f, 0.0f, 0.0f});
-                return true;
-            } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
-                m_camera->moveTo({0.1f, 0.0f, 0.0f});
-                return true;
-            } else if(input::Input::isKeyPressed(KEY_UP)) {
-                m_camera->moveTo({0.0f, 0.1f, 0.0f});
-                return true;
-            } else if(input::Input::isKeyPressed(KEY_DOWN)) {
-                m_camera->moveTo({0.0f, -0.1f, 0.0f});
-                return true;
-            }
-        }
-        else {
-            if(input::Input::isKeyPressed(KEY_LEFT)) {
-                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.0f, -0.1f, 0.0f));
-                //m_camera->setFov();
-                return true;
-            } else if(input::Input::isKeyPressed(KEY_RIGHT)) {
-                *m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.0f, 0.1f, 0.0f));
-                return true;
-            } else if(input::Input::isKeyPressed(KEY_UP)) {
-                fov -= 0.5f;
-                m_camera->setFov(fov);
-                //*m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(0.1f, 0.0f, 0.0f));
-                return true;
-            } else if(input::Input::isKeyPressed(KEY_DOWN)) {
-                fov += 0.5f;
-                m_camera->setFov(fov);
-                //*m_model = glm::rotate(*m_model, glm::radians(1.0f), glm::vec3(-0.1f, 0.0f, 0.0f));
-                return true;
-            }
-        }
-        return false;
     }
 
     bool Application::onWindowClose(events::WindowCloseEvent &event) {
@@ -86,11 +45,12 @@ using renderer::ShaderDataType;
 
     Application::Application(IGraphicApiFactory const& factory):
             m_window(factory.createWindow()),
-            m_camera(std::make_unique<camera::CameraOpenGL>()) {
+            m_camera(std::make_shared<camera::CameraOpenGL>()) {
         m_instance = this;
         m_layerStack = std::make_unique<layers::LayerStack>();
         m_layerStack->pushOverlay(factory.createGui());
-        m_window->setEventCallback(BIND_EVENT_FN(onEvent));
+        m_layerStack->pushOverlay(factory.createCameraManipulator(m_camera));
+        m_window->setEventCallback(BIND_EVENT_FN(Application, onEvent));
         m_model = std::make_shared<glm::mat4>(1.0f);
         m_vertexArray.reset(renderer::VertexArray::create());
 
@@ -104,7 +64,7 @@ using renderer::ShaderDataType;
         };
 
         m_vertexBuffer.reset(renderer::IVertexBuffer::create(verticies, sizeof(verticies)));
-        //m_vertexBuffer->bind();
+
         uint32_t indices[12] = {0,1,2, 2, 3, 0, 1, 4, 2, 2, 4, 5};
         {
             renderer::BufferLayout layout = {
@@ -130,8 +90,7 @@ using renderer::ShaderDataType;
 
     void Application::onEvent(events::Event& event) {
         events::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(onWindowClose));
-        dispatcher.dispatch<events::KeyPressedEvent>(BIND_EVENT_FN(onArrow));
+        dispatcher.dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(Application, onWindowClose));
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
             (*--it)->onEvent(event);
             if (event.isHandled()) {
