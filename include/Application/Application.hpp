@@ -21,6 +21,7 @@
 #include "Object/Object.hpp"
 #include "IApplication.hpp"
 #include "Camera/Camera.hpp"
+#include "Texture/Texture.h"
 
 
 namespace application {
@@ -55,11 +56,14 @@ namespace application {
         std::unique_ptr<LayerStack> m_layerStack;
         std::shared_ptr<IShader> m_shader;
         std::shared_ptr<VertexArray> m_vertexArray;
+        std::shared_ptr<VertexArray> m_bgVertexArray;
+        std::shared_ptr<glm::mat4> m_bgModel;
         std::atomic_flag m_isRunning = false;
         std::shared_ptr<Camera> m_camera;
         std::shared_ptr<glm::mat4> m_model;
         std::shared_ptr<glm::mat4> m_drawModel;
         std::shared_ptr<object::ObjectElements> m_pipes;
+        std::shared_ptr<Texture> m_bgTexture;
         float m_lastTimeStep = 0; //todo class
         float acceleration = 0;
         float inertia = 0;

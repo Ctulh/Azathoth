@@ -44,6 +44,10 @@ namespace renderer {
         glUniform4fv(getUniformLocation(uniformName), 1, vec4);
     }
 
+    void ShaderOpenGL::setUniform1i(std::string const& uniformName, int number) {
+        glUniform1i(getUniformLocation(uniformName), number);
+    }
+
     uint32_t ShaderOpenGL::compileShader(unsigned int shaderType, std::string const& shaderPath) const {
         GLuint shaderId = glCreateShader(shaderType);
 

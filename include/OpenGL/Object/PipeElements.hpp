@@ -21,8 +21,9 @@ namespace object {
         void onUpdate(float) override;
     private:
         std::shared_ptr<GameObject> createPipe();
-        void createPipeColumn();
+        void createPipeColumn(float);
         void moveColumn(float);
+        void moveToBegin();
     private:
         struct object {
             std::shared_ptr<glm::mat4> m_model;

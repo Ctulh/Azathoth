@@ -61,10 +61,40 @@ using renderer::ShaderDataType;
         m_model = std::make_shared<glm::mat4>(1.0f);
         m_drawModel = std::make_shared<glm::mat4>(1.0f);
         m_vertexArray.reset(renderer::VertexArray::create());
+        m_bgVertexArray.reset(renderer::VertexArray::create());
         m_camera->setFov(60);
+        m_bgModel = std::make_shared<glm::mat4>(1.0f);
+        *m_bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f,5.0f,5.0f));
+        m_bgTexture = std::make_shared<Texture>("/home/egor/Downloads/1.png");
 
 
+        m_bgTexture->Bind(1);
        m_pipes = std::make_shared<object::PipeElements>();
+
+       float backGroundVerticies[] = {
+               -1.0f, -1.0f, -1.0f, 0.0f, 1.0f,
+               -1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
+               1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
+               1.0f, 1.0f, -1.0, 1.0f, 0.0f,
+               //-,-
+               //-,+
+              // +,-
+               //+,+
+       };
+
+       auto backGroundVB = std::make_shared<renderer::VertexBufferOpenGL>(backGroundVerticies, sizeof(backGroundVerticies));
+        {
+            renderer::BufferLayout layout = {
+                    {renderer::ShaderDataType::Float3, "a_Position"},
+                    {renderer::ShaderDataType::Float2, "texCoord"}
+            };
+
+            backGroundVB->setLayout(layout);
+        }
+        m_bgVertexArray->addVertexBuffer(backGroundVB);
+        uint32_t backgroundIndices[6] = {0,1,2, 2, 1, 3};
+        auto backgroundIB = std::make_shared<renderer::IndexBufferOpenGL>(backgroundIndices, sizeof(backgroundIndices)/ sizeof(uint32_t));
+        m_bgVertexArray->setIndexBuffer(backgroundIB);
 
         float verticies[ ] = {
                 -0.25f, -0.25f, 0.0f,
@@ -157,6 +187,9 @@ using renderer::ShaderDataType;
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
 
+        float color[] = {0.52f, 0.8f, 0.92f};
+        float birdColor[] = {0.2, 0.4, 0.0};
+
         glEnable(GL_DEPTH_TEST);
         while(m_isRunning.test(std::memory_order_acquire)) {
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
@@ -170,17 +203,18 @@ using renderer::ShaderDataType;
 
             renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
             m_shader->setUniformMatrix4f("Model", &(*m_drawModel)[0][0]);
+            m_shader->setUniformVec3f("Color", birdColor);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
+            m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
+            m_shader->setUniform1i("u_Texture", 1);
+            m_shader->setUniformVec3f("Color", color);
+            m_shader->bind();
+            renderer::Renderer::Submit(m_bgVertexArray);
             m_pipes->bind(m_shader);
             renderer::Renderer::endScene();
 
 
-            gui->begin();
-            for (layers::Layer* layer: (*m_layerStack)) {
-                layer->onImGuiRender();
-            }
-            gui->end();
 
             for (layers::Layer* layer: (*m_layerStack)) {
                 layer->onUpdate(timestep);
@@ -208,3 +242,4 @@ using renderer::ShaderDataType;
     Application* Application::m_instance = nullptr;
 
 }
+//0.52f, 0.8f, 0.92f,

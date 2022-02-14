@@ -22,3 +22,11 @@ set(SOURCE ${IMGUI_PATH}/imgui.cpp
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 target_include_directories(${LIB_NAME} PUBLIC ${IMGUI_PATH}/ ${IMGUI_PATH}/backends glfw/include)
 target_link_libraries(${LIB_NAME} PRIVATE glfw)
+
+set(STB_LIB stb)
+
+set(HEADER stb/stb_image.h)
+
+set(SOURCE stb/deprecated/stb_image.c)
+
+add_library(${STB_LIB} ${HEADER} ${SOURCE})

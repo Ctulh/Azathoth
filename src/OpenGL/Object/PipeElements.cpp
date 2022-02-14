@@ -10,22 +10,25 @@
 #include "Renderer/Renderer.hpp"
 #include "Renderer/VertexBufferOpenGL.hpp"
 
+#include "Logger/Logger.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace object {
 
     PipeElements::PipeElements() {
-        createPipeColumn();
+        for(int i=0;i<5;i++) {
+            createPipeColumn(3.5f * i);
+        }
     }
 
-    void PipeElements::createPipeColumn() {
+    void PipeElements::createPipeColumn(float distanceFromBegin) {
         {
             std::shared_ptr<object> pipeObject = std::make_shared<object>();
             pipeObject->m_model = std::make_shared<glm::mat4>(1.0f);
             pipeObject->m_object = createPipe();
             auto &model = *(pipeObject->m_model);
             model = glm::scale(model, glm::vec3(0.5f, 1.0f, 1.0f));
-            model = glm::translate(model, glm::vec3(3.0f, -2.0f, 0.0f));
+            model = glm::translate(model, glm::vec3(distanceFromBegin + 9, -2.0f, 0.0f));
             m_Objects.push_back(pipeObject);
         } {
             std::shared_ptr<object> pipeObject = std::make_shared<object>();
@@ -34,7 +37,7 @@ namespace object {
             auto &model = *(pipeObject->m_model);
             model = glm::scale(model, glm::vec3(0.5f,1.0f,1.0f));
             model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f,0.0f,1.0f));
-            model = glm::translate(model, glm::vec3(-3.0f ,-2.0f,0.0f));
+            model = glm::translate(model, glm::vec3(-(distanceFromBegin + 9),-2.0f,0.0f));
             m_Objects.push_back(pipeObject);
         }
     }
@@ -44,6 +47,10 @@ namespace object {
         for(auto& el: m_Objects) {
             (*el->m_model) = glm::translate((*el->m_model), glm::vec3(isTopPipe ? 0.01: -0.01,0.0f,0.0f));
             isTopPipe = !isTopPipe;
+        }
+        if((*m_Objects[0]->m_model)[3].x <= -3.5) {
+            logger::log_info("[MOVED]");
+            moveToBegin();
         }
     }
 
@@ -77,11 +84,21 @@ namespace object {
     }
 
     void PipeElements::bind(std::shared_ptr<renderer::IShader> shader) {
+        static float color[] = {0.2, 0.4, 0.0};
         for(auto& el: m_Objects) {
             shader->setUniformMatrix4f("Model", &(*el->m_model)[0][0]);
+            shader->setUniformVec3f("Color", color);
             shader->bind();
             renderer::Renderer::Submit(el->m_object->getVertexArray());
         }
+    }
+
+    void PipeElements::moveToBegin() {
+        (*m_Objects[0]->m_model)[3].x = 3.5;
+        (*m_Objects[1]->m_model)[3].x = 3.5;
+
+        std::rotate(m_Objects.begin(), m_Objects.begin() + 2, m_Objects.end());
+
     }
 
     void PipeElements::addObject(std::shared_ptr<GameObject>) {

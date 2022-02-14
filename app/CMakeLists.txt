@@ -16,6 +16,7 @@ set(LAYERS_LIB Azathoth.LayersLib)
 set(LOGGER_LIB Azathoth.LoggerLib)
 set(RENDERER_LIB Azathoth.RendererLib)
 set(TOOLS_LIB Azathoth.ToolsLib)
+set(TEXTURE_LIB Azathoth.TextureLib)
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
 #------------------------------------------------------------------------------#
@@ -33,6 +34,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${GRAPHIC_API}
         ${LOGGER_LIB}
         ${RENDERER_LIB}
         ${TOOLS_LIB}
+        ${TEXTURE_LIB}
         )
 
 #------------------------------------------------------------------------------#

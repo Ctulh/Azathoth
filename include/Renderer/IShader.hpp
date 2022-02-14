@@ -17,6 +17,7 @@ namespace renderer {
         virtual void setUniformMatrix4f(std::string const&, const float*) {}
         virtual void setUniformVec3f(std::string const&, const float*) {}
         virtual void setUniformVec4f(std::string const&, const float*) {}
+        virtual void setUniform1i(std::string const&, int) {}
     };
 
 }
