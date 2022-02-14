@@ -18,12 +18,16 @@ namespace input {
         static bool isKeyPressed(int keyCode) { return m_instance->isKeyPressedImpl(keyCode); }
         static float getMouseX() { return m_instance->getMouseXImpl(); }
         static float getMouseY() { return m_instance->getMouseYImpl(); }
+        static void hideCursor() { m_instance->hideCursorImpl(); }
+        static void showCursor() { m_instance->showCursorImpl();}
         static void setInstance(std::shared_ptr<Input> input) {
             m_instance = input;
             logger::log_info("[INPUT] Instance changed");
         }
     private:
         virtual std::pair<float, float> getMousePositionImpl() = 0;
+        virtual void hideCursorImpl() = 0;
+        virtual void showCursorImpl() = 0;
         virtual bool isMouseButtonPressedImpl(int button) = 0;
         virtual bool isKeyPressedImpl(int keyCode) = 0;
         virtual float getMouseXImpl() = 0;

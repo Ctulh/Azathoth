@@ -17,6 +17,8 @@
 #include "Renderer/IndexBufferOpenGL.hpp"
 #include "Camera/CameraManipulatorOpenGL.hpp"
 #include "Camera/CameraOpenGL.hpp"
+#include "Input/KeyCodes.hpp"
+#include "Input/Input.h"
 
 namespace application {
 using renderer::ShaderDataType;
@@ -91,11 +93,26 @@ using renderer::ShaderDataType;
     void Application::onEvent(events::Event& event) {
         events::EventDispatcher dispatcher(event);
         dispatcher.dispatch<events::WindowCloseEvent>(BIND_EVENT_FN(Application, onWindowClose));
+        dispatcher.dispatch<events::KeyPressedEvent>(BIND_EVENT_FN(Application, cursorVisible));
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
             (*--it)->onEvent(event);
             if (event.isHandled()) {
                 break;
             }
+        }
+    }
+
+    bool Application::cursorVisible(events::KeyPressedEvent &keyPressedEvent) {
+        static bool isCursorVisible = false;
+        if(keyPressedEvent.getKeyCode() == KEY_ESCAPE) {
+            if(isCursorVisible) {
+                input::Input::hideCursor();
+            }
+            else {
+                input::Input::showCursor();
+            }
+            isCursorVisible = !isCursorVisible;
+            return true;
         }
     }
 
@@ -112,8 +129,8 @@ using renderer::ShaderDataType;
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
 
-        float lightPos [] = {0,2,3,0};
-        float kd [] = {1,1,1};
+        float lightPos [] = {0,0,3,1};
+        float kd [] = {5,5,5};
         float ld [] = {1,1,1};
 
         glEnable(GL_DEPTH_TEST);
@@ -122,11 +139,8 @@ using renderer::ShaderDataType;
             renderer::RenderCommand::clear();
 
 
-            renderer::Renderer::beginScene(m_shader, m_camera->getPointer());
+            renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
             m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
-            m_shader->setUniformVec3f("LightPosition", lightPos);
-            m_shader->setUniformVec3f("Kd", kd);
-            m_shader->setUniformVec3f("Ld", ld);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
             renderer::Renderer::endScene();

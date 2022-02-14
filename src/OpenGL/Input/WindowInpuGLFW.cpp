@@ -41,6 +41,16 @@ namespace input {
         return {static_cast<float>(mouseX), static_cast<float>(mouseY)};
     }
 
+    void WindowInpuGLFW::hideCursorImpl() {
+        auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+
+    void WindowInpuGLFW::showCursorImpl() {
+        auto window = static_cast<GLFWwindow*>(application::Application::getInstance()->getWindow().getNativeWindow().get());
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
     std::shared_ptr<Input> Input::m_instance = nullptr;
 }
 

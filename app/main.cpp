@@ -18,7 +18,7 @@ class ExampleLayer: public layers::Layer {
 public:
     ExampleLayer(): Layer("Example") {}
 
-    void onUpdate() const override {
+    void onUpdate() override {
        /// logger::log_info("ExampleLayer: onUpdate");
 
         if(input::Input::isKeyPressed(KEY_TAB)) {

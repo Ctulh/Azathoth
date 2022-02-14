@@ -23,6 +23,7 @@ namespace camera {
     public:
         CameraManipulatorOpenGL(std::shared_ptr<Camera>&);
     public:
+        void onUpdate() override;
         void onEvent(Event&) override;
     private:
         bool onMouseMoved(MouseMovedEvent&);
@@ -31,6 +32,7 @@ namespace camera {
         int getSign(int);
     private:
         std::shared_ptr<Camera> m_camera;
+        float prevX, prevY;
     };
 
 }

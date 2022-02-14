@@ -95,7 +95,7 @@ namespace renderer {
             }
 
             logger::log_error("[SHADER] {}", infoLog.data());
-            AZATHOTH_ASSERT(isCompiled, "Shader link failed");
+            AZATHOTH_ASSERT(isLinked, "Shader link failed");
             return;
         }
 
@@ -110,7 +110,7 @@ namespace renderer {
         }
         GLint location = glGetUniformLocation(m_rendererId, uniformName.c_str());
         m_uniformIndexes[uniformName] = location;
-        AZATHOTH_ASSERT(location, "Cant find uniform with name: " + uniformName);
+        AZATHOTH_ASSERT(location != -1, ("Cant find uniform with name: " + uniformName).data());
         return location;
     }
 

@@ -22,8 +22,11 @@ namespace camera {
         void setFov(float) override;
         void moveTo(glm::vec3 const&) override;
         void changeFov(float) override;
+        void rotate(float, float) override;
 
-        float const* const getPointer() override;
+        float const* const getViewPointer() override;
+        float const* const getProjectionPointer() override;
+        float const* const getViewProjectionPointer() override;
     private:
         struct Projection {
             Projection() {
@@ -39,11 +42,12 @@ namespace camera {
             float maxDistance;
         };
         struct View {
-            View(): pos(0, 0, 3), lookAt(0, 0, -1), headPos(0, 1, 0) {}
+            View(): pos(0, 0, 3), rotation(0, 0, 0), headPos(0, 1, 0), yaw(-90), pitch(0) {}
         public:
             glm::vec3 pos;
-            glm::vec3 lookAt;
+            glm::vec3 rotation;
             glm::vec3 headPos;
+            float yaw, pitch;
         };
     private:
         void calculateViewMatrix();
@@ -60,6 +64,7 @@ namespace camera {
         std::atomic_flag m_isProjectionValid = ATOMIC_FLAG_INIT;
         std::atomic_flag m_isViewValid = ATOMIC_FLAG_INIT;
         std::atomic_flag m_isMatrixValid = ATOMIC_FLAG_INIT;
+        float m_sensitivity;
     };
 
 }

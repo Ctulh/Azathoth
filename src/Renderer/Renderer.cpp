@@ -6,8 +6,13 @@
 
 namespace renderer {
 
-    void Renderer::beginScene(std::shared_ptr<IShader>& shader, float const* const cameraMatrix) {
-        shader->setUniformMatrix4f("CameraMatrix", cameraMatrix);
+    void Renderer::beginScene(std::shared_ptr<IShader>& shader, float const* const view, float const* const projection) {
+        shader->setUniformMatrix4f("View", view);
+        shader->setUniformMatrix4f("Projection", projection);
+    }
+
+    void Renderer::beginScene(std::shared_ptr<IShader>& shader, float const* const projectionView) {
+        shader->setUniformMatrix4f("ProjectionView", projectionView);
     }
 
     void Renderer::endScene() {

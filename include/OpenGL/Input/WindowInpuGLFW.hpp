@@ -16,6 +16,8 @@ namespace input {
         bool isKeyPressedImpl(int keyCode) override;
         float getMouseXImpl() override;
         float getMouseYImpl() override;
+        void hideCursorImpl() override;
+        void showCursorImpl() override;
     };
 
 }

@@ -58,6 +58,7 @@ namespace application {
         std::shared_ptr<glm::mat4> m_model;
     private:
         void onUpdate();
+        bool cursorVisible(events::KeyPressedEvent& keyPressedEvent);
         bool onWindowClose(events::WindowCloseEvent& event);
         static Application* m_instance;
     };

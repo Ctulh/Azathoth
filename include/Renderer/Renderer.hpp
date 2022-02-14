@@ -15,7 +15,8 @@ namespace renderer {
 
     class Renderer {
     public:
-        static void beginScene(std::shared_ptr<IShader>&, float const* const cameraMatrix);
+        static void beginScene(std::shared_ptr<IShader>&, float const* const, float const* const);
+        static void beginScene(std::shared_ptr<IShader>&, float const* const);
         static void endScene();
         static void Submit(std::shared_ptr<VertexArray>);
     };

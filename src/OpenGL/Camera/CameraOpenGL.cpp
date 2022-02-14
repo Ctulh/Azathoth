@@ -14,7 +14,8 @@ namespace camera {
                                     m_lastProjectionMatrix(std::make_unique<glm::mat4>(0.0f)),
                                     m_lastViewMatrix(std::make_unique<glm::mat4>(0.0f)),
                                     m_projectionData(std::make_unique<Projection>()),
-                                    m_viewData(std::make_unique<View>()) {
+                                    m_viewData(std::make_unique<View>()),
+                                    m_sensitivity(0.1) {
         logger::log_info("[CAMERA] Created successful");
     }
 
@@ -46,7 +47,17 @@ namespace camera {
         clearProjectionRelevance();
     }
 
-    float const* const CameraOpenGL::getPointer() {
+    float const* const CameraOpenGL::getViewPointer() {
+        calculateViewMatrix();
+        return &(*m_lastViewMatrix)[0][0];
+    }
+
+    float const* const CameraOpenGL::getProjectionPointer() {
+        calculateProjectionMatrix();
+        return &(*m_lastProjectionMatrix)[0][0];
+    }
+
+    float const* const CameraOpenGL::getViewProjectionPointer() {
         calculateMatrix();
         return &(*m_lastProjectionViewMatrix)[0][0];
     }
@@ -56,10 +67,37 @@ namespace camera {
             return;
         }
         *m_lastViewMatrix = glm::lookAt(
-                m_viewData->pos,     // Камера находится в мировых координатах (4,3,3)
-                m_viewData->pos + m_viewData->lookAt,  // И направлена в начало координат
+                m_viewData->pos ,     // Камера находится в мировых координатах (4,3,3)
+                m_viewData->pos + m_viewData->rotation,  // И направлена в начало координат
                 m_viewData->headPos  // "Голова" находится сверху
         );
+    }
+
+    void CameraOpenGL::rotate(float offsetX, float offsetY) {
+        offsetX *= m_sensitivity;
+        offsetY *= m_sensitivity;
+
+        float& yaw = m_viewData->yaw;
+        float& pitch = m_viewData->pitch;
+        yaw += offsetX;
+        pitch += offsetY;
+
+        if(pitch > 89.0f) {
+            pitch = 89.0f;
+        }
+        if(pitch < -89.0f) {
+            pitch = -89.0f;
+        }
+
+        logger::log_info("{}, {}", yaw, pitch);
+
+        glm::vec3 front;
+        front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+        front.y = sin(glm::radians(pitch));
+        front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+        m_viewData->rotation = glm::normalize(front);
+
+        clearViewRelevance();
     }
 
     void CameraOpenGL::calculateProjectionMatrix() {
