@@ -20,7 +20,7 @@ namespace camera {
         prevY = pos.second;
     }
 
-    void CameraManipulatorOpenGL::onUpdate() {
+    void CameraManipulatorOpenGL::onUpdate(float) {
         if(input::Input::isKeyPressed(KEY_LEFT_SHIFT)) {
             m_camera->moveTo({0.0f, -0.1f, 0.0f});
         }
@@ -54,15 +54,6 @@ namespace camera {
             }
         }
         return false;
-    }
-
-    int CameraManipulatorOpenGL::getSign(int x) {
-        int mask;
-        if (x != 0) {
-            mask = 1;
-        }
-        mask = 0;
-        return mask | (x >> 31);
     }
 
     bool CameraManipulatorOpenGL::onMouseScrolled(MouseScrolledEvent& mouseScrolledEvent) {

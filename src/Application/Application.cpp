@@ -3,6 +3,7 @@
 //
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <fstream>
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,12 +14,16 @@
 #include "Renderer/VertexBufferOpenGL.hpp"
 #include "Renderer/Renderer.hpp"
 #include "Renderer/RenderCommand.hpp"
+#include "Renderer/VertexArrayOpenGL.hpp"
 #include "Tools/FunctionBinder.hpp"
 #include "Renderer/IndexBufferOpenGL.hpp"
 #include "Camera/CameraManipulatorOpenGL.hpp"
 #include "Camera/CameraOpenGL.hpp"
 #include "Input/KeyCodes.hpp"
 #include "Input/Input.h"
+#include "Object/GameObjectOpenGL.hpp"
+#include "Object/PipeElements.hpp"
+
 
 namespace application {
 using renderer::ShaderDataType;
@@ -51,23 +56,26 @@ using renderer::ShaderDataType;
         m_instance = this;
         m_layerStack = std::make_unique<layers::LayerStack>();
         m_layerStack->pushOverlay(factory.createGui());
-        m_layerStack->pushOverlay(factory.createCameraManipulator(m_camera));
+     // m_layerStack->pushOverlay(factory.createCameraManipulator(m_camera));
         m_window->setEventCallback(BIND_EVENT_FN(Application, onEvent));
         m_model = std::make_shared<glm::mat4>(1.0f);
+        m_drawModel = std::make_shared<glm::mat4>(1.0f);
         m_vertexArray.reset(renderer::VertexArray::create());
+        m_camera->setFov(60);
+
+
+       m_pipes = std::make_shared<object::PipeElements>();
 
         float verticies[ ] = {
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f,
-                0.5f, 0.5f, 0.0f,
-                -0.5f, 0.5f, 0.0f,
-                0.5f, -0.5f, -1.0f,
-                0.5f, 0.5f, -1.0f
+                -0.25f, -0.25f, 0.0f,
+                0.25f, -0.25f, 0.0f,
+                0.25f, 0.25f, 0.0f,
+                -0.25f, 0.25f, 0.0f
         };
 
         m_vertexBuffer.reset(renderer::IVertexBuffer::create(verticies, sizeof(verticies)));
 
-        uint32_t indices[12] = {0,1,2, 2, 3, 0, 1, 4, 2, 2, 4, 5};
+        uint32_t indices[12] = {0,1,2, 2, 3, 0};
         {
             renderer::BufferLayout layout = {
                     {renderer::ShaderDataType::Float3, "a_Position"}
@@ -84,9 +92,21 @@ using renderer::ShaderDataType;
         m_shader = factory.createShader("shader.vert", "shader.frag");
     }
 
-    void Application::onUpdate() {
+    void Application::onUpdate(float timeStep) {
+        m_pipes->onUpdate(timeStep);
+        float fallSpeed = 0.007f;
+        acceleration = acceleration - fallSpeed + inertia;
+
+        height += fabs(acceleration) * acceleration;
+
+        if(inertia > 0) {
+            inertia -= fallSpeed;
+        }
+        //logger::log_info("acceleration {}, inertia {}", acceleration, inertia);
+       *m_drawModel = glm::translate(*m_model, glm::vec3(0.0f, height, 0.0f));
+
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
-            (*--it)->onUpdate();
+            (*--it)->onUpdate(timeStep);
         }
     }
 
@@ -114,6 +134,14 @@ using renderer::ShaderDataType;
             isCursorVisible = !isCursorVisible;
             return true;
         }
+        else if(keyPressedEvent.getKeyCode() == KEY_SPACE) {
+            float jump = 0.06;
+            inertia += jump;
+            acceleration = 0;
+            logger::log_info("[APPLICATION] Space Pressed");
+            return true;
+        }
+        return false;
     }
 
     void Application::run() {
@@ -129,20 +157,22 @@ using renderer::ShaderDataType;
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
         auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
 
-        float lightPos [] = {0,0,3,1};
-        float kd [] = {5,5,5};
-        float ld [] = {1,1,1};
-
         glEnable(GL_DEPTH_TEST);
         while(m_isRunning.test(std::memory_order_acquire)) {
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
             renderer::RenderCommand::clear();
 
+            float time = (float)glfwGetTime();
+            float timestep = time - m_lastTimeStep;
+            m_lastTimeStep = time;
+
+            //logger::log_info("[MAIN LOOP] {}ms", timestep * 1000.0f);
 
             renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
-            m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
+            m_shader->setUniformMatrix4f("Model", &(*m_drawModel)[0][0]);
             m_shader->bind();
             renderer::Renderer::Submit(m_vertexArray);
+            m_pipes->bind(m_shader);
             renderer::Renderer::endScene();
 
 
@@ -153,9 +183,10 @@ using renderer::ShaderDataType;
             gui->end();
 
             for (layers::Layer* layer: (*m_layerStack)) {
-                layer->onUpdate();
+                layer->onUpdate(timestep);
             }
 
+            this->onUpdate(timestep);
             m_window->onUpdate();
         }
     }

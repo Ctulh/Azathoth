@@ -17,7 +17,7 @@ namespace layers {
     public:
         virtual void onAttach() const {};
         virtual void onDetach() const {};
-        virtual void onUpdate() {};
+        virtual void onUpdate(float) {};
         virtual void onImGuiRender() const {};
         virtual void onEvent(events::Event&) {};
        // virtual void begin() const {}

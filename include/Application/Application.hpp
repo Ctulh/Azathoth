@@ -13,10 +13,12 @@
 #include "Events/ApplicationEvent.hpp"
 #include "Events/KeyEvent.hpp"
 #include "Renderer/IVertexBuffer.hpp"
+#include "Object/ObjectElements.hpp"
 #include "Renderer/IIndexBuffer.hpp"
 #include "Renderer/VertexArray.hpp"
 #include "Layers/LayerStack.hpp"
 #include "Window/IWindow.hpp"
+#include "Object/Object.hpp"
 #include "IApplication.hpp"
 #include "Camera/Camera.hpp"
 
@@ -56,8 +58,14 @@ namespace application {
         std::atomic_flag m_isRunning = false;
         std::shared_ptr<Camera> m_camera;
         std::shared_ptr<glm::mat4> m_model;
+        std::shared_ptr<glm::mat4> m_drawModel;
+        std::shared_ptr<object::ObjectElements> m_pipes;
+        float m_lastTimeStep = 0; //todo class
+        float acceleration = 0;
+        float inertia = 0;
+        float height;
     private:
-        void onUpdate();
+        void onUpdate(float);
         bool cursorVisible(events::KeyPressedEvent& keyPressedEvent);
         bool onWindowClose(events::WindowCloseEvent& event);
         static Application* m_instance;

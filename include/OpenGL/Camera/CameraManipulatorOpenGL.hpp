@@ -23,7 +23,7 @@ namespace camera {
     public:
         CameraManipulatorOpenGL(std::shared_ptr<Camera>&);
     public:
-        void onUpdate() override;
+        void onUpdate(float) override;
         void onEvent(Event&) override;
     private:
         bool onMouseMoved(MouseMovedEvent&);
