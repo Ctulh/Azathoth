@@ -16,7 +16,7 @@ set(INPUT_LIB Azathoth.OpenGL.InputLib)
 set(RENDERER_LIB Azathoth.OpenGL.RendererLib)
 set(WINDOW_LIB Azathoth.OpenGL.WindowLib)
 set(CAMERA_LIB Azathoth.OpenGL.CameraLib)
-set(IMGUI_LIB ImGui)
+#set(IMGUI_LIB ImGui)
 set(GLAD_LIB glad)
 set(OBJECT_LIB Azathoth.OpenGL.ObjectLib)
 
@@ -31,7 +31,7 @@ target_link_libraries(${LIB_NAME} PRIVATE ${TOOLS_LIB}
         ${INPUT_LIB}
         ${RENDERER_LIB}
         ${WINDOW_LIB}
-        ${IMGUI_LIB}
+       # ${IMGUI_LIB}
         ${CAMERA_LIB}
         ${GLAD_LIB}
         ${OBJECT_LIB}

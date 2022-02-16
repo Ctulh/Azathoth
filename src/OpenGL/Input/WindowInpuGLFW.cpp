@@ -3,6 +3,7 @@
 //
 
 #include "OpenGL/Input/WindowInpuGLFW.hpp"
+#include <GL/glew.h>
 #include "GLFW/glfw3.h"
 #include "Application/Application.hpp"
 

@@ -17,6 +17,8 @@ set(LOGGER_LIB Azathoth.LoggerLib)
 set(RENDERER_LIB Azathoth.RendererLib)
 set(TOOLS_LIB Azathoth.ToolsLib)
 set(TEXTURE_LIB Azathoth.TextureLib)
+find_package(Freetype REQUIRED)
+find_package(GLUT REQUIRED)
 #------------------------------------------------------------------------------#
 #-----------------------INCLUDE HEADER-----------------------------------------#
 #------------------------------------------------------------------------------#
@@ -35,6 +37,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${GRAPHIC_API}
         ${RENDERER_LIB}
         ${TOOLS_LIB}
         ${TEXTURE_LIB}
+        ${GLUT_LIBRARY}
+        ${FREETYPE_LIBRARIES}
         )
 
 #------------------------------------------------------------------------------#

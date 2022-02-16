@@ -5,7 +5,8 @@ set(SOURCE GraphicsContextOpenGL.cpp
            VertexBufferOpenGL.cpp
            ShaderOpenGL.cpp
            VertexArrayOpenGL.cpp
-           RendererApiOpenGL.cpp)
+           RendererApiOpenGL.cpp
+           )
 
 set(HEADER
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/RendererApiOpenGL.hpp
@@ -13,7 +14,8 @@ set(HEADER
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/ShaderOpenGL.hpp
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/VertexBufferOpenGL.hpp
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/VertexArrayOpenGL.hpp
-           ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/IndexBufferOpenGL.hpp)
+           ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/IndexBufferOpenGL.hpp
+        )
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 

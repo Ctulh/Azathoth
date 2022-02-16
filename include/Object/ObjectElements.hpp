@@ -17,6 +17,10 @@ namespace object {
         virtual void addObject(std::shared_ptr<GameObject>) = 0;
         virtual void bind(std::shared_ptr<renderer::IShader>) = 0;
         virtual void onUpdate(float) = 0;
+        virtual bool checkColission(float, float, float) = 0;
+        virtual bool isPipeFlown(float x) = 0;
+        virtual void restart() = 0;
+        virtual void next() = 0;
     public:
         virtual ~ObjectElements() = default;
     };

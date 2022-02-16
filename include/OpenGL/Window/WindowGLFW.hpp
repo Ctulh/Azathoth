@@ -36,7 +36,7 @@ namespace window {
         void setEventCallback(eventCallbackFunction const&) override;
     private:
         struct WindowData {
-            WindowData(): title(std::make_unique<std::string>("test")), width(1920), height(1080) {}
+            WindowData(): title(std::make_unique<std::string>("test")), width(900), height(600) {}
             std::unique_ptr<std::string> title;
             int width, height;
 

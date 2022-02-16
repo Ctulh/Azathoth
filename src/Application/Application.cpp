@@ -1,11 +1,14 @@
 //
 // Created by egor on 2/9/22.
 //
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <fstream>
 
 #include <glm/gtc/matrix_transform.hpp>
+
 
 #include "Application/Application.hpp"
 #include "Logger/Logger.hpp"
@@ -22,7 +25,11 @@
 #include "Input/KeyCodes.hpp"
 #include "Input/Input.h"
 #include "Object/GameObjectOpenGL.hpp"
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/euler_angles.hpp>
 #include "Object/PipeElements.hpp"
+#define GLT_IMPLEMENTATION
+#include "gltext.h"
 
 
 namespace application {
@@ -64,8 +71,11 @@ using renderer::ShaderDataType;
         m_bgVertexArray.reset(renderer::VertexArray::create());
         m_camera->setFov(60);
         m_bgModel = std::make_shared<glm::mat4>(1.0f);
+        m_rotationModel = std::make_shared<glm::mat4>(1.0f);
         *m_bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f,5.0f,5.0f));
         m_bgTexture = std::make_shared<Texture>("/home/egor/Downloads/1.png");
+
+
 
 
         m_bgTexture->Bind(1);
@@ -76,10 +86,6 @@ using renderer::ShaderDataType;
                -1.0f, 1.0f, -1.0f, 0.0f, 0.0f,
                1.0f, -1.0f, -1.0f, 1.0f, 1.0f,
                1.0f, 1.0f, -1.0, 1.0f, 0.0f,
-               //-,-
-               //-,+
-              // +,-
-               //+,+
        };
 
        auto backGroundVB = std::make_shared<renderer::VertexBufferOpenGL>(backGroundVerticies, sizeof(backGroundVerticies));
@@ -97,15 +103,14 @@ using renderer::ShaderDataType;
         m_bgVertexArray->setIndexBuffer(backgroundIB);
 
         float verticies[ ] = {
-                -0.25f, -0.25f, 0.0f,
-                0.25f, -0.25f, 0.0f,
-                0.25f, 0.25f, 0.0f,
-                -0.25f, 0.25f, 0.0f
+                -0.20f, -0.20f, 0.0f,
+                0.30f, 0.0f, 0.0f,
+                -0.20f, 0.20f, 0.0f
         };
 
         m_vertexBuffer.reset(renderer::IVertexBuffer::create(verticies, sizeof(verticies)));
 
-        uint32_t indices[12] = {0,1,2, 2, 3, 0};
+        uint32_t indices[3] = {0,1,2};
         {
             renderer::BufferLayout layout = {
                     {renderer::ShaderDataType::Float3, "a_Position"}
@@ -123,17 +128,26 @@ using renderer::ShaderDataType;
     }
 
     void Application::onUpdate(float timeStep) {
-        m_pipes->onUpdate(timeStep);
-        float fallSpeed = 0.007f;
-        acceleration = acceleration - fallSpeed + inertia;
+        isDead();
 
+        m_pipes->onUpdate(timeStep);
+        float fallSpeed = 0.005f;
+        acceleration = acceleration - fallSpeed + inertia;
         height += fabs(acceleration) * acceleration;
 
         if(inertia > 0) {
             inertia -= fallSpeed;
         }
         //logger::log_info("acceleration {}, inertia {}", acceleration, inertia);
-       *m_drawModel = glm::translate(*m_model, glm::vec3(0.0f, height, 0.0f));
+       // *m_rotationModel = glm::mat4(1.0f);
+        *m_drawModel = glm::translate(*m_rotationModel, glm::vec3(0.0f, height, 0.0f));
+        *m_drawModel = *m_drawModel * (glm::yawPitchRoll(0.0f,0.0f,(acceleration + (inertia)*0.3f)));
+        //*m_rotationModel = glm::rotate(*m_rotationModel, glm::radians(acceleration*20 + (inertia*20)), glm::vec3(0,0,1));
+       // m_rotationModel->operator[](0).x = 0;
+        // m_rotationModel->operator[](1).y = 0;
+
+
+
 
         for(auto it = m_layerStack->end(); it!= m_layerStack->begin();) {
             (*--it)->onUpdate(timeStep);
@@ -152,6 +166,21 @@ using renderer::ShaderDataType;
         }
     }
 
+    bool Application::isDead() {
+        if((*m_drawModel)[3].y < -1.65f || (*m_drawModel)[3].y > 1.65f || m_pipes->checkColission((*m_drawModel)[3].x, (*m_drawModel)[3].y, 0.1)) {
+            m_isDead = true;
+            gltInit();
+            if(m_currentPoints > m_maxPoints) {
+                m_maxPoints = m_currentPoints;
+            }
+            gltSetText((GLTtext*)(m_text.get()), ("Current record: " + std::to_string(m_maxPoints)).c_str());
+            logger::log_info("DEAD");
+        }
+        if (m_pipes->isPipeFlown((*m_drawModel)[3].x)) {
+            m_currentPoints +=1;
+        }
+    }
+
     bool Application::cursorVisible(events::KeyPressedEvent &keyPressedEvent) {
         static bool isCursorVisible = false;
         if(keyPressedEvent.getKeyCode() == KEY_ESCAPE) {
@@ -165,11 +194,42 @@ using renderer::ShaderDataType;
             return true;
         }
         else if(keyPressedEvent.getKeyCode() == KEY_SPACE) {
-            float jump = 0.06;
-            inertia += jump;
-            acceleration = 0;
-            logger::log_info("[APPLICATION] Space Pressed");
+            if(m_isBegin) {
+                m_isBegin = false;
+                gltTerminate();
+                m_pipes->next();
+                return true;
+            } else if(m_isDead) {
+                m_isDead = false;
+                gltTerminate();
+                m_pipes->next();
+                m_pipes->restart();
+                *m_drawModel = glm::mat4(1.0f);
+                height = 0;
+                acceleration = 0;
+                inertia = 0;
+                return true;
+            }
+            else {
+                float jump = 0.05;
+                inertia += jump;
+                acceleration = 0;
+                //height +=0.05;
+                //logger::log_info("[APPLICATION] Space Pressed");
+            }
             return true;
+        } else if(keyPressedEvent.getKeyCode() == KEY_LEFT_SHIFT) {
+            //float jump = 0.05;
+            //inertia += jump;
+            //acceleration = 0;
+            height -=0.05;
+            logger::log_info("[APPLICATION] Shift Pressed");
+            return true;
+        }  else if(keyPressedEvent.getKeyCode() == KEY_W) {
+            //float jump = 0.05;
+            //inertia += jump;
+            //acceleration = 0;
+            inertia += 0.05;
         }
         return false;
     }
@@ -185,42 +245,71 @@ using renderer::ShaderDataType;
         }
         logger::log_info("[RENDERER] Renderer is running");
         glfwMakeContextCurrent((GLFWwindow*)(m_window->getNativeWindow().get()));
-        auto gui = dynamic_cast<gui::ImGuiLayerGLFW*>((*m_layerStack)["GUI"]);
 
-        float color[] = {0.52f, 0.8f, 0.92f};
+        float color[] = {1.0f,1.0f,1.0f};
         float birdColor[] = {0.2, 0.4, 0.0};
 
         glEnable(GL_DEPTH_TEST);
+        gltInit();
+        GLTtext *text1 = gltCreateText();
+        m_text = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
+        gltSetText(text1, "Space to begin");
+        char str[30];
         while(m_isRunning.test(std::memory_order_acquire)) {
-            renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
+            renderer::RenderCommand::setClearColor({0.0f, 0.0f, 0.0f, 1});
             renderer::RenderCommand::clear();
 
-            float time = (float)glfwGetTime();
-            float timestep = time - m_lastTimeStep;
-            m_lastTimeStep = time;
+            auto time = glfwGetTime();
 
-            //logger::log_info("[MAIN LOOP] {}ms", timestep * 1000.0f);
+            if(m_isBegin || m_isDead) {
+                gltBeginDraw();
 
-            renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
-            m_shader->setUniformMatrix4f("Model", &(*m_drawModel)[0][0]);
-            m_shader->setUniformVec3f("Color", birdColor);
-            m_shader->bind();
-            renderer::Renderer::Submit(m_vertexArray);
-            m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
-            m_shader->setUniform1i("u_Texture", 1);
-            m_shader->setUniformVec3f("Color", color);
-            m_shader->bind();
-            renderer::Renderer::Submit(m_bgVertexArray);
-            m_pipes->bind(m_shader);
-            renderer::Renderer::endScene();
+                gltColor(
+                        cosf((float)time) * 0.5f + 0.5f,
+                        sinf((float)time) * 0.5f + 0.5f,
+                        1.0f,
+                        1.0f);
 
+                gltDrawText2DAligned(text1,
+                                     (GLfloat)(m_window->getWidth() / 2),
+                                     (GLfloat)(m_window->getHeight() / 2),
+                                     3.0f,
+                                     GLT_CENTER, GLT_CENTER);
+                if(m_isDead) {
+                    gltDrawText2DAligned((GLTtext*)(m_text.get()),(GLfloat)(m_window->getWidth() / 2), (GLfloat)(m_window->getHeight() / 2) - 50, 1.0f, GLT_CENTER, GLT_CENTER);
+                }
 
-
-            for (layers::Layer* layer: (*m_layerStack)) {
-                layer->onUpdate(timestep);
+                gltEndDraw();
             }
 
-            this->onUpdate(timestep);
+
+            if(!m_isBegin && !m_isDead) {
+                renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
+
+                m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
+                m_shader->setUniform1i("u_Texture", 1);
+                m_shader->setUniformVec3f("Color", color);
+                m_shader->bind();
+                renderer::Renderer::Submit(m_bgVertexArray);
+
+                m_shader->setUniformMatrix4f("Model", &(*m_drawModel)[0][0]);
+                m_shader->setUniformVec3f("Color", birdColor);
+                m_shader->bind();
+
+               renderer::Renderer::Submit(m_vertexArray);
+
+                m_pipes->bind(m_shader);
+                renderer::Renderer::endScene();
+
+
+
+             for (layers::Layer *layer: (*m_layerStack)) {
+                 layer->onUpdate(time);
+             }
+
+             this->onUpdate(time);
+         }
+
             m_window->onUpdate();
         }
     }
@@ -234,12 +323,12 @@ using renderer::ShaderDataType;
         while(m_isRunning.test(std::memory_order_acquire)) {
             m_isRunning.clear(std::memory_order_release);
         }
-       // m_gui.reset();
-       // m_window.reset();
         logger::log_info("[RENDERER] Renderer is stopped");
     }
 
-    Application* Application::m_instance = nullptr;
+
+
+   Application* Application::m_instance = nullptr;
 
 }
 //0.52f, 0.8f, 0.92f,

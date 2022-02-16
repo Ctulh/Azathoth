@@ -5,9 +5,9 @@
 Texture::Texture(std::string const& path)
 	:m_RedererID(0),m_Filepath(path),m_LocalBuffer(nullptr),m_Height(0),m_Width(0),m_BPP(0)
 {
+    glewInit();
 	stbi_set_unpremultiply_on_load(1);
 	m_LocalBuffer = stbi_load(path.c_str(), &m_Width, &m_Height, &m_BPP, 4);
-    glewInit();
     glActiveTexture(GL_TEXTURE0);
     glGenTextures(1, &m_RedererID);
 	glBindBuffer(GL_TEXTURE, m_RedererID);

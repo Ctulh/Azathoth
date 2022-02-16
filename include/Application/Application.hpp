@@ -8,6 +8,8 @@
 #include <memory>
 #include <atomic>
 #include <glm/glm.hpp>
+#include <map>
+
 
 #include "GraphicApiFactory/IGraphicApiFactory.hpp"
 #include "Events/ApplicationEvent.hpp"
@@ -22,6 +24,7 @@
 #include "IApplication.hpp"
 #include "Camera/Camera.hpp"
 #include "Texture/Texture.h"
+
 
 
 namespace application {
@@ -50,6 +53,13 @@ namespace application {
         void pushOverlay(Layer*) override;
         IWindow& getWindow();
     private:
+        struct Character {
+            unsigned int TextureID;  // ID handle of the glyph texture
+            glm::ivec2   Size;       // Size of glyph
+            glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
+            unsigned int Advance;    // Offset to advance to next glyph
+        };
+    private:
         std::shared_ptr<IVertexBuffer> m_vertexBuffer;
         std::shared_ptr<IIndexBuffer> m_indexBuffer;
         std::unique_ptr<IWindow> m_window;
@@ -64,11 +74,21 @@ namespace application {
         std::shared_ptr<glm::mat4> m_drawModel;
         std::shared_ptr<object::ObjectElements> m_pipes;
         std::shared_ptr<Texture> m_bgTexture;
+        std::shared_ptr<glm::mat4> m_rotationModel;
+        float totalTranslation = 0;
         float m_lastTimeStep = 0; //todo class
         float acceleration = 0;
         float inertia = 0;
-        float height;
+        float height = 0;
+        bool m_isBegin = true;
+        bool m_isDead = false;
+        int m_maxPoints = 0;
+        int m_currentPoints = 0;
+        std::shared_ptr<void> m_text;
+        std::map<char, Character> Characters;
     private:
+        void RenderText(std::string text, float x, float y, float scale, glm::vec3 color);
+        bool isDead();
         void onUpdate(float);
         bool cursorVisible(events::KeyPressedEvent& keyPressedEvent);
         bool onWindowClose(events::WindowCloseEvent& event);

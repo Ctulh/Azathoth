@@ -30,3 +30,13 @@ set(HEADER stb/stb_image.h)
 set(SOURCE stb/deprecated/stb_image.c)
 
 add_library(${STB_LIB} ${HEADER} ${SOURCE})
+
+
+set(FONT_LIB Azathoth.FontsLib)
+
+set(HEADER )
+
+set(SOURCE)
+
+
+#add_library(${FONT_LIB} ${HEADER} ${SOURCE})
