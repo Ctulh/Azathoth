@@ -19,6 +19,7 @@
 #include "Camera/CameraOpenGL.hpp"
 #include "Input/KeyCodes.hpp"
 #include "Input/Input.h"
+#include "Renderer/BasicMesh.hpp"
 
 namespace application {
 using renderer::ShaderDataType;
@@ -134,15 +135,24 @@ using renderer::ShaderDataType;
         float ld [] = {1,1,1};
 
         glEnable(GL_DEPTH_TEST);
+
+        std::shared_ptr<Mesh> model = std::make_shared<Mesh>("/home/egor/Downloads/Basic-OpenGL-with-GLFW-Assimp-master/Assets/kitten.obj");
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>("/home/egor/Downloads/Basic-OpenGL-with-GLFW-Assimp-master/Assets/BrickColor.png");
+        texture->Bind(1);
+
+        glm::mat4 mat = glm::mat4(1.0f);
+
         while(m_isRunning.test(std::memory_order_acquire)) {
             renderer::RenderCommand::setClearColor({0.1f, 0.1f, 0.1f, 1});
             renderer::RenderCommand::clear();
 
 
             renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
-            m_shader->setUniformMatrix4f("Model", &(*m_model)[0][0]);
+            m_shader->setUniformMatrix4f("worldMatrix", &(mat)[0][0]);
+            m_shader->setUniform1i("tex", 1);
             m_shader->bind();
-            renderer::Renderer::Submit(m_vertexArray);
+            model->Draw();
+           // renderer::Renderer::Submit(m_vertexArray);
             renderer::Renderer::endScene();
 
 

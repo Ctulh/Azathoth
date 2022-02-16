@@ -22,6 +22,7 @@ namespace renderer {
         void setUniformMatrix4f(std::string const&, const float *) override;
         void setUniformVec3f(const std::string &, const float *) override;
         void setUniformVec4f(const std::string &, const float *) override;
+        void setUniform1i(const std::string &, int) override;
     private:
         uint32_t compileShader(unsigned int shaderType, std::string const&) const;
         int getUniformLocation(std::string const&);

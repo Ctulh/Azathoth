@@ -5,7 +5,8 @@ set(SOURCE GraphicsContextOpenGL.cpp
            VertexBufferOpenGL.cpp
            ShaderOpenGL.cpp
            VertexArrayOpenGL.cpp
-           RendererApiOpenGL.cpp)
+           RendererApiOpenGL.cpp
+           BasicMesh.cpp)
 
 set(HEADER
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/RendererApiOpenGL.hpp
@@ -13,7 +14,10 @@ set(HEADER
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/ShaderOpenGL.hpp
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/VertexBufferOpenGL.hpp
            ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/VertexArrayOpenGL.hpp
-           ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/IndexBufferOpenGL.hpp)
+           ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/IndexBufferOpenGL.hpp
+           ${PROJECT_SOURCE_DIR}/include/OpenGL/Renderer/BasicMesh.hpp)
+
+find_package(assimp REQUIRED)
 
 add_library(${LIB_NAME} ${HEADER} ${SOURCE})
 
@@ -23,5 +27,7 @@ target_include_directories(${LIB_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/third_party
                                               ${PROJECT_SOURCE_DIR}/third_party/glfw/include
                                               ${PROJECT_BINARY_DIR}/third_party/glad/include
                                               ${PROJECT_SOURCE_DIR}/include/OpenGL)
+
+target_link_libraries(${LIB_NAME} PRIVATE ${ASSIMP_LIBRARIES})
 
 #target_link_libraries(${LIB_NAME} PRIVATE glad glm)

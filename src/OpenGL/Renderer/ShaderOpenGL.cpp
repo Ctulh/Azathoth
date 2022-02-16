@@ -40,6 +40,10 @@ namespace renderer {
         glUniform3fv(getUniformLocation(uniformName), 1, vec3);
     }
 
+    void ShaderOpenGL::setUniform1i(std::string const& uniformName, int i) {
+        glUniform1i(getUniformLocation(uniformName), i);
+    }
+
     void ShaderOpenGL::setUniformVec4f(std::string const& uniformName, const float* vec4) {
         glUniform4fv(getUniformLocation(uniformName), 1, vec4);
     }

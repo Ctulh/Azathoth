@@ -1,10 +1,26 @@
-#version 330 core
+#version 400 core
 
-layout(location = 0) in vec3 a_Position;
+// Vertex attribute for position
+layout(location = 0) in vec3 in_position;
+layout(location = 1) in vec2 in_uv;
+layout(location = 2) in vec3 in_normal;
 
-uniform mat4 ProjectionView;
-uniform mat4 Model;
+// uniform will contain the world matrix.
 
-void main() {
-    gl_Position = ProjectionView * Model * vec4(a_Position, 1.0);
+uniform mat4 worldMatrix;
+uniform mat4 cameraView;
+
+out vec2 uv;
+out vec3 normal;
+
+void main(void)
+{
+    //transform the vector
+    vec4 worldPosition = worldMatrix * vec4(in_position, 1);
+    vec4 viewPosition = cameraView * worldPosition;
+
+    // output the transformed vector
+    gl_Position = viewPosition;
+    normal = mat3(worldMatrix) * in_normal;
+    uv = in_uv;
 }

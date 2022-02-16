@@ -89,7 +89,7 @@ namespace camera {
             pitch = -89.0f;
         }
 
-        logger::log_info("{}, {}", yaw, pitch);
+        //logger::log_info("{}, {}", yaw, pitch);
 
         glm::vec3 front;
         front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));

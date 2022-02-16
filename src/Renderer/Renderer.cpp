@@ -12,7 +12,7 @@ namespace renderer {
     }
 
     void Renderer::beginScene(std::shared_ptr<IShader>& shader, float const* const projectionView) {
-        shader->setUniformMatrix4f("ProjectionView", projectionView);
+        shader->setUniformMatrix4f("cameraView", projectionView);
     }
 
     void Renderer::endScene() {
