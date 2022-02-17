@@ -54,6 +54,13 @@ namespace gui {
         static bool show = true;
         //ImGui::ShowDemoWindow(&show);
         ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        for(auto& el: m_colorEdits) {
+            ImGui::ColorEdit3(el.first.c_str(), el.second);
+        }
+
+        for(auto& el: m_sliders) {
+            ImGui::SliderFloat(el.first.c_str(), el.second, 0.0, 1.0, "value = %.3f");
+        }
     }
 
     void ImGuiLayerGLFW::begin() const {
@@ -79,6 +86,15 @@ namespace gui {
 
       //  glClear(GL_COLOR_BUFFER_BIT);
     }
+
+    void ImGuiLayerGLFW::addSlider(std::string const& name, float* value) {
+        m_sliders[name] = value;
+    }
+
+    void ImGuiLayerGLFW::addColorEdit(const std::string& name, float *value ) {
+        m_colorEdits[name] = value;
+    }
+
 
     ImGuiLayerGLFW::~ImGuiLayerGLFW() {
 

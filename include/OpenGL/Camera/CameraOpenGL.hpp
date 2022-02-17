@@ -21,6 +21,7 @@ namespace camera {
         void setRatio(float) override;
         void setFov(float) override;
         void moveTo(glm::vec3 const&) override;
+        void move(const glm::vec3 &) override;
         void changeFov(float) override;
         void rotate(float, float) override;
 

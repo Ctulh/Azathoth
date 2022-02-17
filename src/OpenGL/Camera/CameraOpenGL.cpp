@@ -24,6 +24,11 @@ namespace camera {
         clearViewRelevance();
     }
 
+    void CameraOpenGL::move(const glm::vec3 & vec) {
+        m_viewData->pos = vec;
+        clearViewRelevance();
+    }
+
     void CameraOpenGL::setFov(float fovAngle) {
         m_projectionData->fovAngle = fovAngle;
         clearProjectionRelevance();

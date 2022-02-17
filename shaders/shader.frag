@@ -1,22 +1,44 @@
 #version 400 core
 
-in vec2 uv;
-in vec3 normal;
+out vec4 FragColor;
 
-uniform sampler2D tex;
+in vec3 FragPos;
+in vec3 Normal;
+in vec3 LightPos;   // extra in variable, since we need the light position in view space we calculate this in the vertex shader
+in vec2 TexCoords;
 
-void main(void)
+struct Material {
+   sampler2D diffuse;
+   sampler2D specular;
+   float shininess;
+};
+
+struct Light {
+   vec3 ambient;
+   vec3 diffuse;
+   vec3 specular;
+};
+
+uniform vec3 viewPos;
+uniform Material material;
+uniform Light light;
+
+void main()
 {
-   vec4 ambientLight = vec4(.1, .1, .1, 1);
-   vec4 lightColor = vec4(1, .9, .5, 1);
-   vec3 lightDir = vec3(-1, -1, -2);
+   vec3 ambient  = light.ambient  * vec3(texture(material.diffuse, TexCoords));
 
-   // calculate diffuse lighting and clamp between 0 and 1
-   float ndotl = clamp(-dot(normalize(lightDir), normalize(normal)), 0, 1);
+   // diffuse
+   vec3 norm = normalize(Normal);
+   vec3 lightDir = normalize(LightPos - FragPos);
+   float diff = max(dot(norm, lightDir), 0.0);
+   vec3 diffuse  = light.diffuse  * diff * vec3(texture(material.diffuse, TexCoords));
 
-   // add diffuse lighting to ambient lighting and clamp a second time
-   vec4 lightValue = clamp(lightColor * ndotl + ambientLight, 0, 1);
+   // specular
+   vec3 viewDir = normalize(viewPos - FragPos);
+   vec3 reflectDir = reflect(-lightDir, norm);
+   float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+   vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoords));
 
-   // finally, sample from the texuture and multiply in the light.
-   gl_FragColor = texture(tex, uv) * lightValue;
+   vec3 result = ambient + diffuse;
+   FragColor = vec4(ambient + diffuse + specular, 1.0);
 }

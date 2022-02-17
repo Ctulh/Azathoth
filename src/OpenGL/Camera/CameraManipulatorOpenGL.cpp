@@ -28,7 +28,7 @@ namespace camera {
 
     void CameraManipulatorOpenGL::onEvent(Event& event) {
         events::EventDispatcher dispatcher(event);
-        dispatcher.dispatch<events::MouseMovedEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onMouseMoved));
+        //dispatcher.dispatch<events::MouseMovedEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onMouseMoved));
         dispatcher.dispatch<events::KeyPressedEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onKeyPressed));
         dispatcher.dispatch<events::MouseScrolledEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onMouseScrolled));
         dispatcher.dispatch<events::MouseMovedEvent>(BIND_EVENT_FN(CameraManipulatorOpenGL, onMouseMoved));
@@ -66,11 +66,14 @@ namespace camera {
     }
 
     bool CameraManipulatorOpenGL::onMouseScrolled(MouseScrolledEvent& mouseScrolledEvent) {
-        m_camera->changeFov(-(mouseScrolledEvent.getYOffset() * 1.5f));
+
+        //m_camera->changeFov(-(mouseScrolledEvent.getYOffset() * 1.5f));
+        m_camera->moveTo(glm::vec3(0.0f,0.0f, -(mouseScrolledEvent.getYOffset())));
         return true;
     }
 
     bool CameraManipulatorOpenGL::onMouseMoved(MouseMovedEvent& mouseMovedEvent) {
+        if(input::Input::isKeyPressed(KEY_LEFT_ALT)){
         auto [newX, newY] = mouseMovedEvent.getPos();
         float xOffset = newX - prevX;
         float yOffset = newY - prevY;
@@ -81,6 +84,8 @@ namespace camera {
         m_camera->rotate(xOffset, -yOffset);
 
         return true;
+        }
+        return false;
     }
 
 }

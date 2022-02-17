@@ -20,8 +20,10 @@ namespace renderer {
         void bind() const override;
         void unBind() const override;
         void setUniformMatrix4f(std::string const&, const float *) override;
+        void setUniformMatrix3f(const std::string &, const float *) override;
         void setUniformVec3f(const std::string &, const float *) override;
         void setUniformVec4f(const std::string &, const float *) override;
+        void setUniform1f(const std::string &, float) override;
         void setUniform1i(const std::string &, int) override;
     private:
         uint32_t compileShader(unsigned int shaderType, std::string const&) const;

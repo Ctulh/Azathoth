@@ -52,10 +52,13 @@ namespace application {
         std::unique_ptr<IWindow> m_window;
         std::unique_ptr<LayerStack> m_layerStack;
         std::shared_ptr<IShader> m_shader;
+        std::shared_ptr<IShader> m_shaderDefault;
         std::shared_ptr<VertexArray> m_vertexArray;
         std::atomic_flag m_isRunning = false;
         std::shared_ptr<Camera> m_camera;
         std::shared_ptr<glm::mat4> m_model;
+        std::shared_ptr<glm::vec3> m_lightPos;
+        std::shared_ptr<glm::mat4> m_lightModel;
     private:
         void onUpdate();
         bool cursorVisible(events::KeyPressedEvent& keyPressedEvent);

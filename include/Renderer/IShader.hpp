@@ -15,9 +15,11 @@ namespace renderer {
         virtual void unBind() const = 0;
 
         virtual void setUniformMatrix4f(std::string const&, const float*) {}
+        virtual void setUniformMatrix3f(std::string const&, const float*) {}
         virtual void setUniformVec3f(std::string const&, const float*) {}
         virtual void setUniformVec4f(std::string const&, const float*) {}
         virtual void setUniform1i(std::string const&, int) {}
+        virtual void setUniform1f(std::string const&, float) {}
     };
 
 }
