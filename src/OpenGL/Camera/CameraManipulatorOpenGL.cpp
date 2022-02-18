@@ -72,14 +72,22 @@ namespace camera {
         return true;
     }
 
+    int CameraManipulatorOpenGL::sign (int n) {
+        return (n>0) - (n<0);
+    }
+
     bool CameraManipulatorOpenGL::onMouseMoved(MouseMovedEvent& mouseMovedEvent) {
         if(input::Input::isKeyPressed(KEY_LEFT_ALT)){
         auto [newX, newY] = mouseMovedEvent.getPos();
+
         float xOffset = newX - prevX;
         float yOffset = newY - prevY;
 
         prevX = newX;
         prevY = newY;
+
+        xOffset = sign(xOffset);
+        yOffset = sign(yOffset);
 
         m_camera->rotate(xOffset, -yOffset);
 

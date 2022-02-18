@@ -43,7 +43,7 @@ namespace camera {
             float maxDistance;
         };
         struct View {
-            View(): pos(0, 0, 3), rotation(0, 0, 0), headPos(0, 1, 0), yaw(-90), pitch(0) {}
+            View(): pos(0, 0, 3), rotation(0, 0, -1), headPos(0, 1, 0), yaw(-90), pitch(0) {}
         public:
             glm::vec3 pos;
             glm::vec3 rotation;

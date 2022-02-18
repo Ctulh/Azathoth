@@ -95,7 +95,7 @@ using renderer::ShaderDataType;
             //  *m_lightPos = glm::rotate(*m_lightPos, glm::radians(fi), glm::vec3(0.0f,1.0f,0.0f));
             fi += 0.2;
             *m_lightModel = glm::rotate(matrix, glm::radians(fi), glm::vec3(0.0f, 1.0f, 0.0f));
-            *m_lightModel = glm::translate(*m_lightModel, glm::vec3(5, 2, 0));
+            *m_lightModel = glm::translate(*m_lightModel, glm::vec3(10, 0, 0));
             //m_lightModel->operator[](0).x = m_lightPos->x;
             //m_lightModel->operator[](0).y = m_lightPos->y;
             m_lightPos->x = m_lightModel->operator[](3).x;

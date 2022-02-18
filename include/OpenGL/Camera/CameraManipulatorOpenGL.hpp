@@ -26,6 +26,7 @@ namespace camera {
         void onUpdate() override;
         void onEvent(Event&) override;
     private:
+        int sign(int);
         bool onMouseMoved(MouseMovedEvent&);
         bool onKeyPressed(KeyPressedEvent&);
         bool onMouseScrolled(MouseScrolledEvent&);
