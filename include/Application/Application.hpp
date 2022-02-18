@@ -59,6 +59,7 @@ namespace application {
         std::shared_ptr<glm::mat4> m_model;
         std::shared_ptr<glm::vec3> m_lightPos;
         std::shared_ptr<glm::mat4> m_lightModel;
+        bool m_lightMoving = true;
     private:
         void onUpdate();
         bool cursorVisible(events::KeyPressedEvent& keyPressedEvent);

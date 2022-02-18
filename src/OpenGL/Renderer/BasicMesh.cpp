@@ -49,7 +49,7 @@ Mesh::Mesh(std::string filePath)
 
     // Load the file into a "scene"
     for(int k = 0; k < 1; k++)
-        scene = importer.ReadFile(filePath, aiProcessPreset_TargetRealtime_Quality | aiProcess_PreTransformVertices);
+        scene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
     // only one mesh in the file, because its a simple tutorial
     const struct aiMesh* mesh = scene->mMeshes[0];
@@ -64,6 +64,7 @@ Mesh::Mesh(std::string filePath)
         memcpy(&v.m_position, 	&mesh->mVertices[t], 		sizeof(glm::vec3));
         memcpy(&v.m_normal, 	&mesh->mNormals[t], 		sizeof(glm::vec3));
         memcpy(&v.m_texCoord, 	&mesh->mTextureCoords[0][t],sizeof(glm::vec2));
+        memcpy(&v.m_tangent, 	&mesh->mTangents[t],        sizeof(glm::vec3));
 
         // add to vertex buffer
         m_vertices.push_back(v);
@@ -130,9 +131,10 @@ void Mesh::Draw()
     SetupAttribute(0, 3, GL_FLOAT, Vertex3dUVNormal, m_position);
     SetupAttribute(1, 2, GL_FLOAT, Vertex3dUVNormal, m_texCoord);
     SetupAttribute(2, 3, GL_FLOAT, Vertex3dUVNormal, m_normal);
+    SetupAttribute(3, 3, GL_FLOAT, Vertex3dUVNormal, m_tangent);
 
     // Enable all attrubutes
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
         glEnableVertexAttribArray(i);
 
     // Draw all indices in the index buffer
@@ -143,7 +145,7 @@ void Mesh::Draw()
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
     // Disable all attributes (enabled in the macro)
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 4; i++)
         glDisableVertexAttribArray(i);
 
 }

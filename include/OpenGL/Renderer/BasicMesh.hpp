@@ -18,11 +18,13 @@ struct Vertex3dUVNormal
     glm::vec3 m_position;
     glm::vec2 m_texCoord;
     glm::vec3 m_normal;
+    glm::vec3 m_tangent;
 
-    Vertex3dUVNormal(glm::vec3 position, glm::vec2 texCoord, glm::vec3 normal) {
+    Vertex3dUVNormal(glm::vec3 position, glm::vec2 texCoord, glm::vec3 normal, glm::vec3 tangent) {
         m_position = position;
         m_texCoord = texCoord;
         m_normal = normal;
+        m_tangent = tangent;
     }
     Vertex3dUVNormal() {}
 };

@@ -50,6 +50,10 @@ namespace gui {
         logger::log_info("[IMGUI OPENGL] Detached");
     }
 
+    void ImGuiLayerGLFW::addCheckBox(const std::string &name, bool *value) {
+        m_checkbox[name] = value;
+    }
+
     void ImGuiLayerGLFW::onImGuiRender() const {
         static bool show = true;
         //ImGui::ShowDemoWindow(&show);
@@ -60,6 +64,10 @@ namespace gui {
 
         for(auto& el: m_sliders) {
             ImGui::SliderFloat(el.first.c_str(), el.second, 0.0, 1.0, "value = %.3f");
+        }
+
+        for(auto& el: m_checkbox) {
+            ImGui::Checkbox(el.first.c_str(), el.second);
         }
     }
 

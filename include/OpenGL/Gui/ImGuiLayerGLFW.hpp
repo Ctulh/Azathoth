@@ -22,12 +22,14 @@ class ImGuiLayerGLFW: public layers::Layer {
         void onImGuiRender() const override;
         void addSlider(std::string const&, float*);
         void addColorEdit(std::string const&, float*);
+        void addCheckBox(std::string const&, bool*);
 
         void begin() const;
         void end() const;
     private:
     std::map<std::string, float*> m_sliders;
     std::map<std::string, float*> m_colorEdits;
+    std::map<std::string, bool*> m_checkbox;
     };
 
 }
