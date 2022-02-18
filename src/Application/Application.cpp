@@ -162,11 +162,11 @@ using renderer::ShaderDataType;
 
         glEnable(GL_DEPTH_TEST);
 
-        std::shared_ptr<Mesh> model = std::make_shared<Mesh>("/home/egor/Desktop/Sci-fi BoxTRi.obj");
+        std::shared_ptr<Mesh> model = std::make_shared<Mesh>("/home/egor/Downloads/uploads_files_1980630_F4r3l_Sci_Fi_Rifle_SM.obj");
         std::shared_ptr<Mesh> light = std::make_shared<Mesh>("/home/egor/Downloads/sphere.obj");
-        std::shared_ptr<Texture> texture = std::make_shared<Texture>("/home/egor/Desktop/Textures/DefaultMaterial_Base_color.png");
-        std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/egor/Desktop/Textures/DefaultMaterial_Metallic.png");
-        std::shared_ptr<Texture> textureNormal = std::make_shared<Texture>("/home/egor/Desktop/Textures/DefaultMaterial_Normal_OpenGL.png");
+        std::shared_ptr<Texture> texture = std::make_shared<Texture>("/home/egor/Downloads/uploads_files_1980630_Maps/F4r3l_Sci_Fi_Rifle_BaseColor.tga");
+        std::shared_ptr<Texture> textureSpecular = std::make_shared<Texture>("/home/egor/Downloads/uploads_files_1980630_Maps/F4r3l_Sci_Fi_Rifle__MRAO.tga");
+        std::shared_ptr<Texture> textureNormal = std::make_shared<Texture>("/home/egor/Downloads/uploads_files_1980630_Maps/F4r3l_Sci_Fi_Rifle_Normal.tga");
         texture->Bind(1);
         textureSpecular->Bind(2);
         textureNormal->Bind(3);
@@ -176,6 +176,8 @@ using renderer::ShaderDataType;
         bool normalMap = true;
 
         glm::mat4 mat = glm::mat4(1.0f);
+        mat = glm::scale(mat, glm::vec3 (0.05,0.05,0.05));
+        //mat = glm::rotate(mat, glm::radians(90.0f), glm::vec3(-1.0,0.0,0.0));
 
         auto imGUI =new gui::ImGuiLayerGLFW;
 
