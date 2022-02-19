@@ -168,10 +168,10 @@ namespace object {
         static float color[] = {1.0f,1.0f,1.0f};
         for(auto& el: m_Objects) {
             shader->setUniformMatrix4f("Model", &(*el->m_model)[0][0]);
-            shader->setUniformVec3f("Color", color);
-            shader->setUniform1i("u_Texture", 101);
+           // shader->setUniformVec3f("Color", color);
+            //shader->setUniform1i("u_Texture", 101);
             shader->bind();
-            renderer::Renderer::Submit(el->m_object->getVertexArray());
+
         }
     }
 

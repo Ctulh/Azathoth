@@ -26,7 +26,6 @@
 #include "Texture/Texture.h"
 
 
-
 namespace application {
 
     using graphicApiFactory::IGraphicApiFactory;
@@ -72,6 +71,8 @@ namespace application {
         std::shared_ptr<Camera> m_camera;
         std::shared_ptr<glm::mat4> m_model;
         std::shared_ptr<glm::mat4> m_drawModel;
+
+        std::shared_ptr<Texture> m_flappyTexture;
         std::shared_ptr<object::ObjectElements> m_pipes;
         std::shared_ptr<Texture> m_bgTexture;
         std::shared_ptr<glm::mat4> m_rotationModel;

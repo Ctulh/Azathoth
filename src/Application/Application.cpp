@@ -30,6 +30,7 @@
 #include "Object/PipeElements.hpp"
 #define GLT_IMPLEMENTATION
 #include "gltext.h"
+#include "Renderer/BasicMesh.hpp"
 
 
 namespace application {
@@ -72,13 +73,13 @@ using renderer::ShaderDataType;
         m_camera->setFov(60);
         m_bgModel = std::make_shared<glm::mat4>(1.0f);
         m_rotationModel = std::make_shared<glm::mat4>(1.0f);
+        *m_rotationModel = glm::scale(*m_rotationModel, glm::vec3(0.02,0.02,0.02));
         *m_bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f,5.0f,5.0f));
         m_bgTexture = std::make_shared<Texture>("/home/egor/Downloads/1.png");
-
-
-
+        m_flappyTexture = std::make_shared<Texture>("/home/egor/Downloads/flappy_bird-00.yssxl.png");
 
         m_bgTexture->Bind(1);
+        m_flappyTexture->Bind(2);
        m_pipes = std::make_shared<object::PipeElements>();
 
        float backGroundVerticies[] = {
@@ -102,27 +103,6 @@ using renderer::ShaderDataType;
         auto backgroundIB = std::make_shared<renderer::IndexBufferOpenGL>(backgroundIndices, sizeof(backgroundIndices)/ sizeof(uint32_t));
         m_bgVertexArray->setIndexBuffer(backgroundIB);
 
-        float verticies[ ] = {
-                -0.20f, -0.20f, 0.0f,
-                0.30f, 0.0f, 0.0f,
-                -0.20f, 0.20f, 0.0f
-        };
-
-        m_vertexBuffer.reset(renderer::IVertexBuffer::create(verticies, sizeof(verticies)));
-
-        uint32_t indices[3] = {0,1,2};
-        {
-            renderer::BufferLayout layout = {
-                    {renderer::ShaderDataType::Float3, "a_Position"}
-            };
-
-            m_vertexBuffer->setLayout(layout);
-        }
-
-        m_vertexArray->addVertexBuffer(m_vertexBuffer);
-
-        m_indexBuffer.reset(IIndexBuffer::create(indices, sizeof(indices)/sizeof(uint32_t)));
-        m_vertexArray->setIndexBuffer(m_indexBuffer);
 
         m_shader = factory.createShader("shader.vert", "shader.frag");
     }
@@ -248,6 +228,10 @@ using renderer::ShaderDataType;
 
         float color[] = {1.0f,1.0f,1.0f};
         float birdColor[] = {0.2, 0.4, 0.0};
+        std::shared_ptr<Mesh> m_flappyBird = std::make_shared<Mesh>("/home/egor/Desktop/flappy-bird3d/source/flappy bird-00.obj");
+       // m_flappyTexture = std::make_shared<Texture>("/home/egor/Downloads/flappy_bird-00.yssxl.png");
+        //m_flappyTexture->Bind(1);
+
 
         glEnable(GL_DEPTH_TEST);
         gltInit();
@@ -256,7 +240,7 @@ using renderer::ShaderDataType;
         gltSetText(text1, "Space to begin");
         char str[30];
         while(m_isRunning.test(std::memory_order_acquire)) {
-            renderer::RenderCommand::setClearColor({0.0f, 0.0f, 0.0f, 1});
+            renderer::RenderCommand::setClearColor({1.0f, 1.0f, 1.0f, 1});
             renderer::RenderCommand::clear();
 
             auto time = glfwGetTime();
@@ -286,17 +270,19 @@ using renderer::ShaderDataType;
             if(!m_isBegin && !m_isDead) {
                 renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
 
-                m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
-                m_shader->setUniform1i("u_Texture", 1);
-                m_shader->setUniformVec3f("Color", color);
-                m_shader->bind();
-                renderer::Renderer::Submit(m_bgVertexArray);
+              //  m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
+              //  m_shader->setUniform1i("u_Texture", 1);
+            //    m_shader->bind();
+             //   renderer::Renderer::Submit(m_bgVertexArray);
 
                 m_shader->setUniformMatrix4f("Model", &(*m_drawModel)[0][0]);
-                m_shader->setUniformVec3f("Color", birdColor);
+                m_shader->setUniform1i("u_Texture", 2);
+              //  m_shader->setUniformVec3f("Color", color);
                 m_shader->bind();
+               // renderer::Renderer::Submit(m_vertexArray);
+                m_flappyBird->Draw();
 
-               renderer::Renderer::Submit(m_vertexArray);
+              // renderer::Renderer::Submit(m_vertexArray);
 
                 m_pipes->bind(m_shader);
                 renderer::Renderer::endScene();
