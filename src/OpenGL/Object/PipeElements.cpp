@@ -17,11 +17,13 @@ namespace object {
 
     bool PipeElements::isPipeFlown(float x) {
         for(int i=0; i< m_Objects.size(); i++) {
-            glm::vec4 border6 = (*m_Objects[i]->m_model) * m_borders[6];
-            if(!m_Objects[i]->pipeFlown && x>border6.x) {
-                m_Objects[i]->pipeFlown = true;
-                m_Objects[i+1]->pipeFlown = true;
-                return true;
+            if(i%2==0) {
+                glm::vec4 border6 = (*m_Objects[i]->m_model) * m_borders[6];
+                if (!m_Objects[i]->pipeFlown && x > border6.x) {
+                    m_Objects[i]->pipeFlown = true;
+                    m_Objects[i + 1]->pipeFlown = true;
+                    return true;
+                }
             }
         }
         return false;
@@ -50,8 +52,8 @@ namespace object {
             float squareX1 = x + r;
             float squareY1 = y - r;
             if(number % 2 == 1) {
-                bool first = squareY <= border1.y - 0.3;
-                bool second = squareY1 > border6.y - 0.3;
+                bool first = squareY <= border1.y - 0.6;
+                bool second = squareY1 > border6.y - 0.6;
                 bool third = squareX1 < border6.x + 0.3;
                 bool fourth = squareX > border1.x - 0.3;
 
@@ -96,20 +98,23 @@ namespace object {
         {
             std::shared_ptr<object> pipeObject = std::make_shared<object>();
             pipeObject->m_model = std::make_shared<glm::mat4>(1.0f);
-            pipeObject->m_object = createPipe();
+            pipeObject->m_mesh = std::make_shared<Mesh>("/home/egor/Desktop/pipe.obj");
             auto &model = *(pipeObject->m_model);
+          //  model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f,0.0f,.0f));
             model = glm::scale(model, glm::vec3(0.5f, 1.0f, 1.0f));
             model = glm::translate(model, glm::vec3(distanceFromBegin + 9,((4-heightIndex+1) * -0.5f) - 0.3, 0.0f));
+
             pipeObject->index = 4-heightIndex;
             pipeObject->pipeFlown = false;
             m_Objects.push_back(pipeObject);
         } {
             std::shared_ptr<object> pipeObject = std::make_shared<object>();
             pipeObject->m_model = std::make_shared<glm::mat4>(1.0f);
-            pipeObject->m_object = createPipe();
+            pipeObject->m_mesh = std::make_shared<Mesh>("/home/egor/Desktop/pipe.obj");
             auto &model = *(pipeObject->m_model);
             model = glm::scale(model, glm::vec3(0.5f,1.0f,1.0f));
             model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f,0.0f,1.0f));
+          //  model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f,0.0f,0.0f));
             model = glm::translate(model, glm::vec3(-(distanceFromBegin + 9),((heightIndex+1) * -0.5f) -0.3 ,0.0f));
             pipeObject->index =  heightIndex;
             pipeObject->pipeFlown = false;
@@ -168,10 +173,10 @@ namespace object {
         static float color[] = {1.0f,1.0f,1.0f};
         for(auto& el: m_Objects) {
             shader->setUniformMatrix4f("Model", &(*el->m_model)[0][0]);
-           // shader->setUniformVec3f("Color", color);
-            //shader->setUniform1i("u_Texture", 101);
+            //shader->setUniformVec3f("Color", color);
+            shader->setUniform1i("u_Texture", 101);
             shader->bind();
-
+            el->m_mesh->Draw();
         }
     }
 

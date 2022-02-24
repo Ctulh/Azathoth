@@ -10,6 +10,7 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include "Texture/Texture.h"
+#include "Renderer/BasicMesh.hpp"
 
 namespace object {
 
@@ -32,7 +33,7 @@ namespace object {
     private:
         struct object {
             std::shared_ptr<glm::mat4> m_model;
-            std::shared_ptr<GameObject> m_object;
+            std::shared_ptr<Mesh> m_mesh;
             uint32_t index;
             bool pipeFlown;
         };

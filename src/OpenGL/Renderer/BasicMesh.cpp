@@ -50,7 +50,8 @@ Mesh::Mesh(std::string filePath)
 
     // Load the file into a "scene"
     for(int k = 0; k < 1; k++)
-        scene = importer.ReadFile(filePath, aiProcess_Triangulate  | aiProcess_CalcTangentSpace);
+        scene = importer.ReadFile(filePath,
+                                            aiProcess_Triangulate           );
 
     // only one mesh in the file, because its a simple tutorial
     const struct aiMesh* mesh = scene->mMeshes[0];

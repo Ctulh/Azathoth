@@ -72,9 +72,12 @@ using renderer::ShaderDataType;
         m_bgVertexArray.reset(renderer::VertexArray::create());
         m_camera->setFov(60);
         m_bgModel = std::make_shared<glm::mat4>(1.0f);
+        *m_bgModel = glm::scale(*m_bgModel, glm::vec3(5.2f,2.9f,2.0f));
+        //*m_bgModel = glm::rotate(*m_bgModel, glm::radians(90.0f), glm::vec3(0.0f,1.0f,0.0f));
+        *m_bgModel = glm::rotate(*m_bgModel, glm::radians(180.0f), glm::vec3(0.0f,0.0f,1.0f));
         m_rotationModel = std::make_shared<glm::mat4>(1.0f);
         *m_rotationModel = glm::scale(*m_rotationModel, glm::vec3(0.02,0.02,0.02));
-        *m_bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f,5.0f,5.0f));
+      //  *m_bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f,5.0f,5.0f));
         m_bgTexture = std::make_shared<Texture>("/home/egor/Downloads/1.png");
         m_flappyTexture = std::make_shared<Texture>("/home/egor/Downloads/flappy_bird-00.yssxl.png");
 
@@ -111,7 +114,7 @@ using renderer::ShaderDataType;
         isDead();
 
         m_pipes->onUpdate(timeStep);
-        float fallSpeed = 0.005f;
+        float fallSpeed = 0.025f;
         acceleration = acceleration - fallSpeed + inertia;
         height += fabs(acceleration) * acceleration;
 
@@ -191,7 +194,7 @@ using renderer::ShaderDataType;
                 return true;
             }
             else {
-                float jump = 0.05;
+                float jump = 0.24;
                 inertia += jump;
                 acceleration = 0;
                 //height +=0.05;
@@ -229,6 +232,7 @@ using renderer::ShaderDataType;
         float color[] = {1.0f,1.0f,1.0f};
         float birdColor[] = {0.2, 0.4, 0.0};
         std::shared_ptr<Mesh> m_flappyBird = std::make_shared<Mesh>("/home/egor/Desktop/flappy-bird3d/source/flappy bird-00.obj");
+        auto m_background = std::make_shared<Mesh>("/home/egor/Desktop/baclgrounbd2.obj");
        // m_flappyTexture = std::make_shared<Texture>("/home/egor/Downloads/flappy_bird-00.yssxl.png");
         //m_flappyTexture->Bind(1);
 
@@ -239,8 +243,9 @@ using renderer::ShaderDataType;
         m_text = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
         gltSetText(text1, "Space to begin");
         char str[30];
+
         while(m_isRunning.test(std::memory_order_acquire)) {
-            renderer::RenderCommand::setClearColor({1.0f, 1.0f, 1.0f, 1});
+            renderer::RenderCommand::setClearColor({0.0f, 0.0f, 0.0f, 1});
             renderer::RenderCommand::clear();
 
             auto time = glfwGetTime();
@@ -270,10 +275,11 @@ using renderer::ShaderDataType;
             if(!m_isBegin && !m_isDead) {
                 renderer::Renderer::beginScene(m_shader, m_camera->getViewProjectionPointer());
 
-              //  m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
-              //  m_shader->setUniform1i("u_Texture", 1);
-            //    m_shader->bind();
-             //   renderer::Renderer::Submit(m_bgVertexArray);
+                m_shader->setUniformMatrix4f("Model", &(*m_bgModel)[0][0]);
+                m_shader->setUniform1i("u_Texture", 1);
+                m_shader->bind();
+                m_background->Draw();
+
 
                 m_shader->setUniformMatrix4f("Model", &(*m_drawModel)[0][0]);
                 m_shader->setUniform1i("u_Texture", 2);
