@@ -52,8 +52,8 @@ namespace object {
             float squareX1 = x + r;
             float squareY1 = y - r;
             if(number % 2 == 1) {
-                bool first = squareY <= border1.y - 0.6;
-                bool second = squareY1 > border6.y - 0.6;
+                bool first = squareY <= border1.y - 0.3;
+                bool second = squareY1 > border6.y - 0.3;
                 bool third = squareX1 < border6.x + 0.3;
                 bool fourth = squareX > border1.x - 0.3;
 
@@ -86,7 +86,7 @@ namespace object {
         m_borders.emplace_back(-0.65,1.25f,0.0f, 1.0f);
         m_borders.emplace_back(0.65,1.25f,0.0, 1.0f);
         for(int i=0;i<4;i++) {
-            createPipeColumn(3.5f * i);
+            createPipeColumn(4.5f * i);
         }
 
         m_texture = std::make_shared<Texture>("/home/egor/Downloads/pipe.png");
