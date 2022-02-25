@@ -80,6 +80,10 @@ using renderer::ShaderDataType;
       //  *m_bgModel = glm::scale(glm::mat4(1.0f), glm::vec3(10.0f,5.0f,5.0f));
         m_bgTexture = std::make_shared<Texture>("/home/egor/Downloads/1.png");
         m_flappyTexture = std::make_shared<Texture>("/home/egor/Downloads/flappy_bird-00.yssxl.png");
+        m_text = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
+        m_recordText = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
+
+        gltSetText((GLTtext*)(m_recordText.get()), "Space to begin");
 
         m_bgTexture->Bind(1);
         m_flappyTexture->Bind(2);
@@ -152,6 +156,9 @@ using renderer::ShaderDataType;
     bool Application::isDead() {
         if((*m_drawModel)[3].y < -1.65f || (*m_drawModel)[3].y > 1.65f || m_pipes->checkColission((*m_drawModel)[3].x, (*m_drawModel)[3].y, 0.1)) {
             m_isDead = true;
+            m_text = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
+            m_recordText = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
+            gltSetText((GLTtext*)(m_recordText.get()), "Space to begin");
             gltInit();
             if(m_currentPoints > m_maxPoints) {
                 m_maxPoints = m_currentPoints;
@@ -239,9 +246,8 @@ using renderer::ShaderDataType;
 
         glEnable(GL_DEPTH_TEST);
         gltInit();
-        GLTtext *text1 = gltCreateText();
-        m_text = std::shared_ptr<void>(gltCreateText(), [](void* text){gltDeleteText((GLTtext*)text);});
-        gltSetText(text1, "Space to begin");
+
+
         char str[30];
 
         while(m_isRunning.test(std::memory_order_acquire)) {
@@ -251,6 +257,7 @@ using renderer::ShaderDataType;
             auto time = glfwGetTime();
 
             if(m_isBegin || m_isDead) {
+
                 gltBeginDraw();
 
                 gltColor(
@@ -259,7 +266,7 @@ using renderer::ShaderDataType;
                         1.0f,
                         1.0f);
 
-                gltDrawText2DAligned(text1,
+                gltDrawText2DAligned((GLTtext*)(m_recordText.get()),
                                      (GLfloat)(m_window->getWidth() / 2),
                                      (GLfloat)(m_window->getHeight() / 2),
                                      3.0f,

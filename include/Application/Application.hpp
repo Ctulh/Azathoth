@@ -86,6 +86,7 @@ namespace application {
         int m_maxPoints = 0;
         int m_currentPoints = 0;
         std::shared_ptr<void> m_text;
+        std::shared_ptr<void> m_recordText;
         std::map<char, Character> Characters;
     private:
         void RenderText(std::string text, float x, float y, float scale, glm::vec3 color);
