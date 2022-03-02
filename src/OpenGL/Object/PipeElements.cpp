@@ -37,7 +37,7 @@ namespace object {
     void PipeElements::restart() {
         m_Objects.clear();
         for(int i=0;i<4;i++) {
-            createPipeColumn(3.5f * i);
+            createPipeColumn(4.0f * i);
         }
     }
 
@@ -129,7 +129,7 @@ namespace object {
             (*el->m_model) = glm::translate((*el->m_model), glm::vec3(isTopPipe ? 0.01: -0.01,0.0f,0.0f));
             isTopPipe = !isTopPipe;
         }
-        if((*m_Objects[0]->m_model)[3].x <= -3.5) {
+        if((*m_Objects[0]->m_model)[3].x <= -5) {
             logger::log_info("[MOVED]");
             moveToBegin();
         }
@@ -181,8 +181,8 @@ namespace object {
     }
 
     void PipeElements::moveToBegin() {
-        (*m_Objects[0]->m_model)[3].x = 3.5;
-        (*m_Objects[1]->m_model)[3].x = 3.5;
+        (*m_Objects[0]->m_model)[3].x = 4.5;
+        (*m_Objects[1]->m_model)[3].x = 4.5;
 
         std::rotate(m_Objects.begin(), m_Objects.begin() + 2, m_Objects.end());
 
